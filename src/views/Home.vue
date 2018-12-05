@@ -17,7 +17,6 @@ import tHeader from '@/components/tHeader.vue'
 import tMain from '@/components/tMain.vue'
 import tFooter from '@/components/tFooter.vue'
 import tLogin from '@/components/tLogin.vue'
-import Qs from 'qs'
 
 export default {
   name: 'home',
@@ -28,9 +27,25 @@ export default {
     tLogin
   },
   mounted:function(){
-    this.$api.getIndex({
-      username:"admin",
-      password:"123456"
+    //登录
+    // this.$api.login({
+    //   username:"18621904918",
+    //   password:"123456"
+    // }).then(res => {
+    //   console.log(res)
+    // });
+    //注册
+    // this.$api.register({
+    //   phone:"18621904918",
+    //   pass:"123456"
+    // }).then(res => {
+    //   console.log(res)
+    // });
+    //添加用户
+    this.$api.addUser({
+      user_type:"1",
+      username:"18612345678",
+      pass:"000000"
     }).then(res => {
       console.log(res)
     });

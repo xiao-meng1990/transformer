@@ -58,36 +58,34 @@
             <div v-show="!firstStep" class="goods-second-step">
               <div class="goods-title">
                 <p>商品信息</p>
-
                 <el-form size="small" ref="form" :model="form" label-width="100px">
                   <el-form-item label="商品地址">
-                    <div>https://detail.tmall.com/item.htm?id=562200283003</div>
+                    <div :v-bind="form.goodsUrl"></div>
                   </el-form-item>
                   <el-form-item label="商品分类">
-                    <el-select v-model="form.classify" placeholder="分类">
-                      <el-option label="鞋类" value="鞋类"></el-option>
-                      <el-option label="家具" value="家具"></el-option>
+                    <el-select v-model="form.classify" placeholder="分类" v-for="item in typeList">
+                      <el-option label="item.type" value="item.id"></el-option>
                     </el-select>
                   </el-form-item>
                   <el-form-item label="商品标题">
-                    <el-input v-model="form.title" placeholder="例：品牌+品名+样式+规格等，清楚描述商品，10到20个字以内"></el-input>
+                    <el-input v-model="form.goodsTitle" placeholder="例：品牌+品名+样式+规格等，清楚描述商品，10到20个字以内"></el-input>
                   </el-form-item>
                   <el-form-item label="商品主图">
-                    <el-input v-model="form.img" placeholder="请填写淘宝图片空间地址"></el-input>
+                    <el-input v-model="form.goodsImg" placeholder="请填写淘宝图片空间地址"></el-input>
                   </el-form-item>
                   <el-form-item label="商品营销图">
                     <el-upload
                       class="avatar-uploader"
-                      action="https://jsonplaceholder.typicode.com/posts/"
+                      action="http://101.132.172.234/web/goods/upload"
                       :show-file-list="false"
                       :on-success="handleAvatarSuccess"
                       :before-upload="beforeAvatarUpload">
-                      <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar">
+                      <img v-if="imageUrl" :src="imageUrl" class="avatar">
                       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                     </el-upload>
                   </el-form-item>
                   <el-form-item label="推广文案">
-                    <el-input type="textarea" v-model="form.desc"></el-input>
+                    <el-input type="textarea" v-model="form.goodsDesc"></el-input>
                   </el-form-item>
                   <p class="m-t-30">优惠券信息</p>
                   <el-form-item label="优惠券类型">
@@ -100,12 +98,12 @@
                   </el-form-item>
 
                   <el-form-item label="优惠券链接">
-                    <el-input placeholder="券原始总量" v-model="form.date1">
+                    <el-input placeholder="券原始总量" v-model="form.ticketTotalNum">
                       <template slot="append">张</template>
                     </el-input>
                   </el-form-item>
                   <el-form-item label="券后价">
-                    <el-input placeholder="价格" v-model="form.date2">
+                    <el-input placeholder="价格" v-model="form.goodsPrice">
                       <template slot="append">元</template>
                     </el-input>
                   </el-form-item>
@@ -270,16 +268,19 @@ export default {
       isShow:true,
       firstStep:false,
       form: {
-        name: '',
-        classify: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        ticketType: '',
-        desc: '',
-        imageUrl: ''
+        goodsUrl:"https://detail.tmall.com/item.htm?id=562200283003",
+        classify:"",
+        goodsTitle:"",
+        goodsImg:"",
+        goodsDesc:"",
+        ticketType:"",
+        ticketUrl:"",
+        ticketTotalNum:"",
+        goodsPrice:"",
+        type:[]
       },
+      typeList:[],
+      imageUrl:"",
       userInfoForm:{
 
       },
@@ -313,7 +314,9 @@ export default {
   },
   methods:{
     handleAvatarSuccess(res, file) {
+      console.log(file.raw)
       this.imageUrl = URL.createObjectURL(file.raw);
+      console.log(this.imageUrl)
     },
     beforeAvatarUpload(file) {
       const isJPG = file.type === 'image/jpeg';
@@ -328,7 +331,8 @@ export default {
       return isJPG && isLt2M;
     },
     onSubmit() {
-      console.log('submit!');
+      let data = this.data.form;
+      console.log(data);
     },
     submitUserInfo(){
       console.log('submitUserInfo!');

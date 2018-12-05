@@ -3,9 +3,15 @@
     <div class="audit-banner">
       <el-button size="small" type="primary">已选中(25)</el-button>
     </div>
-    <div class="audit-screen"></div>
-    <div class="audit-data"></div>
-    <div class="audit-page"></div>
+    <div class="audit-screen m-t-20">
+
+    </div>
+    <div class="audit-data">
+
+    </div>
+    <div class="audit-page">
+      
+    </div>
   </div>
 </template>
 <script>
