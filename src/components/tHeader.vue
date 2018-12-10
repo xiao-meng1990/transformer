@@ -1,8 +1,7 @@
 <template>
   <div class="box">
     <div class="box-head">
-      <div class="box-logo"></div>
-      <div class="box-title">樊登读书</div>
+      <div @click="goHome" class="box-logo"></div>
       <div class="box-function">
         <slot></slot>
       </div>
@@ -16,6 +15,11 @@ export default {
     return {
 
     }
+  },
+  methods:{
+    goHome:function(){
+      this.$router.push({path:"/"})
+    }
   }
 }
 </script>
@@ -23,27 +27,34 @@ export default {
 .box{
   position: fixed;
   width: 100%;
-  min-width: 1200px;
+  min-width: 600px;
   top: 0;
   box-shadow: 0 0 1px rgba(0,0,0,0.25);
   transition: background-color 0.3s ease-in-out;
-  background-color: #ffffff;
+  background-color: rgb(69, 175, 252);
   font-size: 12px;
-  padding: 15px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   height: 50px;
   z-index: 999;
 }
 .box-head{
-  width: 1200px;
+  max-width: 1200px;
   margin: 0 auto;
 }
+.box-head:after{
+  content: "";
+  display: block;
+  clear: both;
+}
 .box-logo{
-  background-image: url(../assets/images/logotransformer2.png);
+  background-image: url(../assets/images/logo.png);
   background-repeat: no-repeat;
-  width: 50px;
+  width: 139px;
   height: 50px;
   background-size: 100% 100%;
   float: left;
+  cursor: pointer;
 }
 .box-title{
   font-size: 28px;
@@ -52,9 +63,11 @@ export default {
   float: left;
 }
 .box-function{
+  cursor: pointer;
   line-height: 50px;
   font-size: 14px;
   float: right;
+  padding-right: 15px;
 }
 </style>
 

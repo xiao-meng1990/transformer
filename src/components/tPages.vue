@@ -1,12 +1,10 @@
 <template>
   <div class="block">
     <el-pagination
-      @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="sizes"
       :page-size="size"
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, prev, pager, next, jumper"
       :total="totalNum">
     </el-pagination>
   </div>
@@ -16,8 +14,6 @@ export default {
   data(){
     return {
       name:"tPages",
-      sizes:[50,100,150,200],
-      size:50
     }
   },
   props:{
@@ -27,13 +23,14 @@ export default {
     },
     totalNum:{
       type: Number
+    },
+    size:{
+      type: Number,
+      default:20
     }
 
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
-    },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     }

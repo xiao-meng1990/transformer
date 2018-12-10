@@ -1,6 +1,6 @@
 <template>
   <div class="login">
-    <el-tabs :value="sel" type="border-card" stretch>
+    <el-tabs :value="sel" type="border-card" @tab-click="handleClick" stretch>
       <el-tab-pane name="login" label="登录">
         <el-input class="m-b-15 m-t-15" v-model="lPhone" type="text" placeholder="请输入手机号"></el-input>
         <el-input class="m-b-15" v-model="lPassword" type="password" placeholder="请输入密码"></el-input>
@@ -25,11 +25,12 @@
   </div>
 </template>
 <script>
+import util from '../assets/js/util.js'
 export default {
   data(){
     return {
-      lPhone: '',
-      lPassword: '',
+      lPhone:"",
+      lPassword:"",
       rPhone:"",
       rPassword:"",
       rAgainPassword:"",
@@ -37,6 +38,9 @@ export default {
     }
   },
   methods:{
+    handleClick:function(tab, event){
+      this.sel=tab.name;
+    },
     goRegister:function(){
       this.sel="register";
     },
@@ -46,24 +50,60 @@ export default {
     login:function(){
       //登录
       let _this = this;
-      console.log(_this.data.lPhone+"....."+_this.data.lPassword);
-      this.$api.login({
-        username:_this.data.lPhone,
-        password:_this.data.lPassword
+      console.log(_this.lPhone+"....."+_this.lPassword);
+      _this.$api.login({
+        username:_this.lPhone,
+        password:_this.lPassword
+      }).then(res => {
+        console.log(res)
+        if(res.code == 0){
+          util.setStorage("token",res.data["access-token"])
+          _this.userInfo();
+        }else{
+          _this.$message.error(res.msg);
+        }
+      });
+    },
+    register:function(){
+      //注册
+      let _this = this;
+      console.log(_this.rPhone+"....."+_this.rPassword);
+      this.$api.register({
+        phone:_this.rPhone,
+        pass:_this.rPassword
       }).then(res => {
         console.log(res)
       });
     },
-    registe:function(){
-      //注册
+    userInfo:function(){
       let _this = this;
-      console.log(_this.data.rPhone+"....."+_this.data.rPassword);
-      this.$api.register({
-        phone:_this.data.rPhone,
-        pass:_this.data.rPassword
-      }).then(res => {
+      _this.$api.getUserInfo().then(res => {
         console.log(res)
-      });
+        if(res.code == 0){
+          util.setStorJson("userInfo",res.data);
+          _this.judge(res.data.user_type)
+        }else{
+           _this.$message.error(res.msg);
+        }
+      })
+    },
+    // 判断用户角色
+    judge:function(type){
+      let _this =this;
+      switch (type) {
+        case "1":
+          _this.$router.push({path: "taoke"});
+          break;
+        case "2":
+          _this.$router.push({path: "admin"});
+          break;
+        case "3":
+          _this.$router.push({path: "app"});
+          break;
+        default:
+          _this.$router.push({path: "product"});
+          break;
+      }
     }
   }
 }

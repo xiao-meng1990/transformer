@@ -13,7 +13,7 @@ export default {
   },
   beforeMount(){
     var winH = document.documentElement.clientHeight;
-    var minHeight = winH - 226;
+    var minHeight = winH - 206;
     this.minH = minHeight;
   }
 }
@@ -22,7 +22,7 @@ export default {
 .main-box{
   padding-top: 20px;
   width: 1200px;
-  margin: 20px auto 0;
+  margin: 0 auto;
   /* background-color: #ffffff; */
 }
 </style>

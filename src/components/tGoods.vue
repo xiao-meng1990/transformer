@@ -1,25 +1,16 @@
 <template>
   <div class="goods">
+    <div class="goods-ticket">券￥100</div>
     <img src="../assets/images/card.jpg" alt="">
-    <div class="goods-name">
-      鲁茜 智能控温调奶器
-    </div>
     <div class="goods-info">
-      <div class="goods-detail">
-        <div class="goods-left">
-          <div class="font">券</div>
-          <div class="font-mian">￥7</div>
-        </div>
-        <div class="goods-right">
-          <div class="font">券后价</div>
-          <div class="font-mian2">￥16</div>
-        </div>
+      <div class="goods-center">
+        <div class="goods-name">恒源祥男士羊毛衫纯色高领毛衣加厚韩版冬季线衣保暖打底针织衫潮</div>
+        <div class="goods-price">券后<span class="price-style">￥2132</span></div>
       </div>
-      <div class="m-b-10">
-        <el-button type="primary" plain size="mini">详情</el-button>
+      <div class="goods-bottom">
+        <div>店铺：兴宇地毯家居旗舰店</div>
+        <div>放单人：sir联盟-小六</div>
       </div>
-      <div>店铺：兴宇地毯家居旗舰店</div>
-      <div>放单人：sir联盟-小六</div>
     </div>
   </div>
 </template>
@@ -37,36 +28,67 @@ export default {
 <style scoped>
   .goods{
     width: 228px;
-    height: 380px;
+    height: 362px;
     float: left;
     margin-right: 6px;
     margin-left: 6px;
-    border: 1px solid #eeeeee;
     box-sizing: border-box;
     position: relative;
     margin-bottom: 20px;
+    background-color: #ffffff;
+    cursor: pointer;
+  }
+  .goods-ticket{
+    position: absolute;
+    top: 0;
+    left: 69px;
+    width: 90px;
+    height: 30px;
+    background-color: #ff918a;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    color: #ffffff;
+    font-size: 18px;
+    line-height: 30px;
+    text-align: center;
   }
   .goods>img{
-    width: 226px;
-    height: 226px;
+    width: 228px;
+    height: 228px;
+  }
+  .goods-center{
+    padding: 8px;
   }
   .goods-name{
-    position: absolute;
     top: 186px;
-    width: 211px;
-    font-size: 14px;
-    color: #ffffff;
-    padding: 0 5px 0 10px;
-    height: 40px;
+    font-size: 16px;
+    color: #333333;
     overflow: hidden;
-    line-height: 40px;
     text-overflow: ellipsis;
     white-space: nowrap;
-    /* background-color:rgba(255,68,0,.8); */
-    background-color: rgba(0, 0, 0,0.6);
+    font-weight: 600;
   }
-  .goods-info{
-    padding: 8px;
+  .goods-price{
+    text-align: center;
+    color: #333333;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .goods-price>span{
+    color: #ff918a;
+    font-size: 20px;
+    font-weight: 400;
+  }
+  .goods-bottom{
+    background-color: #f7f7f7;
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+  .goods-bottom div{
+    font-size: 16px;
+    color: #999999;
+    padding: 3px;
+    text-align: center;
   }
   .goods-detail{
     width: 208px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="admin">
+  <div class="taoke">
     <t-header>
       <el-button type="text">选品库</el-button>
     </t-header>
@@ -21,21 +21,17 @@ import tMain from '@/components/tMain.vue'
 import tFooter from '@/components/tFooter.vue'
 import tLeftTab from '@/components/tLeftTab.vue'
 import tPages from '@/components/tPages.vue'
-import tToAudit from '@/module/admin/tToAudit.vue'
 
 export default {
-  name: 'admin',
+  name: 'taoke',
   data(){
     return {
       option:[{
-        name:"待审核",
-        url:"/admin/start"
+        name:"全部商品",
+        url:"/app/allgoods"
       },{
-        name:"已审核",
-        url:"/admin/end"
-      },{
-        name:"开通帐号",
-        url:"/admin/dredge"
+        name:"已选中商品",
+        url:"/app/selgoods"
       }],
       def:0
     }
@@ -45,7 +41,6 @@ export default {
     tHeader,
     tMain,
     tPages,
-    tToAudit,
     tLeftTab
   },
   methods:{
@@ -57,7 +52,7 @@ export default {
 </script>
 
 <style scoped>
-  .admin{
+  .taoke{
     background-color: #F7FAFF;
     margin-top: 20px;
     padding: 1px;

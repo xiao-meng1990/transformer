@@ -2,7 +2,7 @@
   <div class="home">
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
     <t-header>
-      <el-button type="text">选品库</el-button>
+      <span class="xuan-pin" type="text">选品库</span>
     </t-header>
     <t-main class="text-right">
       <t-login class="location"></t-login>
@@ -42,13 +42,13 @@ export default {
     //   console.log(res)
     // });
     //添加用户
-    this.$api.addUser({
-      user_type:"1",
-      username:"18612345678",
-      pass:"000000"
-    }).then(res => {
-      console.log(res)
-    });
+    // this.$api.addUser({
+    //   user_type:"1",
+    //   username:"18612345678",
+    //   pass:"000000"
+    // }).then(res => {
+    //   console.log(res)
+    // });
     
   },
   methods:{
@@ -67,6 +67,10 @@ export default {
   }
   .text-right{
     text-align: right;
+  }
+  .xuan-pin{
+    color: #ffffff;
+    font-size: 14px;
   }
 </style>
 
