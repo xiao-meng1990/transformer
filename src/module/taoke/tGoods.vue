@@ -7,7 +7,7 @@
         @click="select(item.id)" 
         plain
       >{{item.name}}({{item.count}})</el-button>
-      <el-button size="small" type="primary" style="float:right">发布商品</el-button>
+      <el-button @click="release" size="small" type="primary" style="float:right">发布商品</el-button>
       <div class="m-t-20">
         <el-button 
           v-for="item in dateButtonList" 
@@ -18,10 +18,12 @@
         <el-date-picker
           class="m-l-20"
           size="small"
+          value-format="yyyy-MM-dd"
           v-model="dates"
           type="daterange"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          @change="dateRange"
           :default-time="['00:00:00', '23:59:59']">
         </el-date-picker>
       </div>
@@ -79,10 +81,12 @@
     </div>
 
     <div class="m-t-20">
-      <t-pages 
+      <t-pages
+        ref="headerChild"
+        @handleCurrentChange="handleCurrentChange"
         :currentPage="currentPage"
         :totalNum="totalNum"
-        :size="pageSize"></t-pages>
+      ></t-pages>
     </div>
   </div>
 </template>
@@ -115,8 +119,8 @@ export default {
       startDate:"",
       endDate:"",
       currentPage: 1,
-      pageSize:20,
-      totalNum:1000,
+      pageSize:"",
+      totalNum:0,
       tableData: [],
       count:50,
 
@@ -124,6 +128,10 @@ export default {
   },
   mounted:function(){
     let _this = this;
+    let userInfo = util.getStorJson("userInfo");
+    _this.selButtonList[0].count = userInfo.selected_num;
+    _this.selButtonList[1].count = userInfo.unselected_num;
+    _this.pageSize = this.$refs.headerChild.size;
     _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
     _this.table();
   },
@@ -131,11 +139,28 @@ export default {
     tPages
   },
   methods:{
+    handleCurrentChange (val) {
+      console.log(val);
+      _this.currentPage = val;
+      this.table();
+    },
     select:function(index){
       this.selectId = index;
+      this.table();
     },
     selectDate:function(index){
-      this.dateId = index;
+      let _this = this;
+      _this.dateId = index;
+      _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
+      _this.endDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
+      _this.table();
+    },
+    dateRange:function(d){
+      let _this = this;
+      _this.dateId = 0;
+      _this.startDate = d[0];
+      _this.endDate = d[1];
+      _this.table();
     },
     table:function(){
       let _this = this;
@@ -149,9 +174,13 @@ export default {
       }).then(res => {
         if(res.code == 0){
           _this.tableData = res.data.list;
+          _this.totalNum = parseFloat(res.data.total);
         } 
         
       });
+    },
+    release:function(){
+      this.$router.push({path:"../taoke/add"})
     }
   }
 }

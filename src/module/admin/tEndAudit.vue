@@ -1,8 +1,12 @@
 <template>
   <div class="audit-box">
     <div class="audit-screen">
-      <el-button size="small" type="primary" plain>已通过({{count}})</el-button>
-      <el-button size="small" type="" plain>已拒绝({{count}})</el-button>
+      <el-button 
+        v-for="item in selButtonList" 
+        size="small" :type="item.id==selectId?'primary':''" 
+        @click="select(item.id)" 
+        plain
+      >{{item.name}}({{item.count}})</el-button>
       <div class="m-t-20">
         <label class="m-r-10">劵后价</label>
         <el-input size="small" class="el-input" v-model="goodsEndPriceBefore">
@@ -25,18 +29,24 @@
         <el-radio v-model="radio" label="2">未选中</el-radio>
       </div>
       <div class="m-t-20">
-        <el-button size="small" type="" plain>昨天</el-button>
-        <el-button size="small" type="primary" plain>今天</el-button>
+        <el-button 
+          v-for="item in dateButtonList" 
+          size="small" :type="item.id==dateId?'primary':''" 
+          @click="selectDate(item.id)" 
+          plain
+        >{{item.name}}</el-button>
         <el-date-picker
           class="m-l-20"
           size="small"
+          value-format="yyyy-MM-dd"
           v-model="dates"
           type="daterange"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          @change="dateRange"
           :default-time="['00:00:00', '23:59:59']">
         </el-date-picker>
-        <el-button class="float-r" size="small" type="primary">查询</el-button>
+        <el-button @click="query" class="float-r" size="small" type="primary">查询</el-button>
       </div>
     </div>
     <div class="m-t-30 audit-data">
@@ -92,6 +102,8 @@
     </div>
     <div class="audit-page m-t-20">
       <t-pages 
+        ref="headerChild"
+        @handleCurrentChange="handleCurrentChange"
         :currentPage="currentPage"
         :totalNum="totalNum"></t-pages>
     </div>
@@ -99,20 +111,39 @@
 </template>
 <script>
 import tPages from '@/components/tPages.vue'
+import util from '../../assets/js/util.js'
 export default {
   name:"t-end-audit",
   data(){
     return {
-      count:50,
+      dates:"",
+      selButtonList:[{
+        name:"已通过",
+        id:1,
+        count:0
+      },{
+        name:"已拒绝",
+        id:4,
+        count:0
+      }],
+      dateButtonList:[{
+        name:"昨天",
+        id:2
+      },{
+        name:"今天",
+        id:1
+      }],
+      selectId:1,// 1 待选中；？？？？TODO
+      dateId:0,
       goodsEndPriceBefore:"",
       goodsEndPriceAfter:"",
       ticketPrice:"",
-      typeList:"",
+      typeList:[],
       classify:"",
-      dates:"",
       currentPage: 1,
-      totalNum:1000,
+      totalNum:0,
       radio: '1',
+      pageSize:"",
       tableData:[]
     }
   },
@@ -121,9 +152,61 @@ export default {
   },
   mounted:function(){
     let _this = this;
+    _this.pageSize = this.$refs.headerChild.size;
     _this.$api.category().then(res => {
       _this.typeList = res.data;
     });
+    _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
+    _this.table();
+  },
+  methods:{
+    handleCurrentChange (val) {
+      console.log(val);
+      _this.currentPage = val;
+      this.table();
+    },
+    select:function(index){
+      this.selectId = index;
+      this.table();
+    },
+    selectDate:function(index){
+      let _this = this;
+      _this.dateId = index;
+      _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
+      _this.endDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
+      _this.table();
+    },
+    dateRange:function(d){
+      let _this = this;
+      _this.dateId = 0;
+      _this.startDate = d[0];
+      _this.endDate = d[1];
+    },
+    query:function(){
+      this.table();
+    },
+    table:function(){
+      let _this = this;
+      //淘客商品列表
+      _this.$api.goodsList({
+        price:_this.ticketPrice,  //券面额
+        s_price:_this.goodsEndPriceBefore,  //筛选券后价  小
+        e_price:_this.goodsEndPriceAfter,  //筛选券后价  大
+        type:_this.classify,  //商品类型 鞋子等
+        status:_this.selectId,   //0 未审核 1 待选中 2 已选中  3 下架 4 未通过审核 5  已审核
+        s_date:_this.startDate,
+        e_date:_this.endDate,
+        page:_this.currentPage,
+        pageSize:_this.pageSize
+      }).then(res => {
+        if(res.code == 0){
+          _this.tableData = res.data.list;
+          _this.totalNum = parseFloat(res.data.total);
+        } 
+        
+      });
+      
+    }
   }
 }
 </script>

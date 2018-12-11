@@ -14,6 +14,7 @@ export default {
   data(){
     return {
       name:"tPages",
+      size:20
     }
   },
   props:{
@@ -23,16 +24,13 @@ export default {
     },
     totalNum:{
       type: Number
-    },
-    size:{
-      type: Number,
-      default:20
     }
 
   },
   methods: {
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.$emit('handleCurrentChange',{'val':val});
+      // console.log(`当前页: ${val}`);
     }
   }
   
