@@ -7,8 +7,11 @@
     plain
     >{{item.name}}</el-button>
     <el-form size="small" class="m-t-30" ref="form" :model="accountsForm" label-width="60px">
-      <el-form-item label="帐号">
-        <el-input v-model="accountsForm.phone" placeholder="请输入帐号"></el-input>
+      <el-form-item label="手机号">
+        <el-input v-model="accountsForm.phone" placeholder="请输入手机号"></el-input>
+      </el-form-item>
+      <el-form-item label="用户名">
+        <el-input v-model="accountsForm.nickName" placeholder="请输入用户名"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input v-model="accountsForm.password" placeholder="请输入密码"></el-input>

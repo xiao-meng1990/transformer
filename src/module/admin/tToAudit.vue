@@ -1,10 +1,14 @@
 <template>
   <div class="audit-box">
     <div class="audit-screen">
-      <el-button size="small" type="primary" plain>带审核({{count}})</el-button>
+      <el-button size="small" type="primary" plain>待审核({{totalNum}})</el-button>
       <div class="m-t-20">
         <label class="m-r-10">劵后价</label>
-        <el-input size="small" class="el-input" v-model="goodsEndPriceBefore">
+        <el-input 
+          size="small" 
+          class="el-input"
+          v-model.number="goodsEndPriceBefore"
+        >
           <template slot="append">元</template>
         </el-input>
         <label class="m-r-10 m-l-10">—</label>
@@ -47,48 +51,63 @@
         style="width: 100%"
         :highlight-current-Row="true">
         <el-table-column
-          prop="date"
           label="发布人/提交时间"
-          width="150">
+          width="140">
+          <template slot-scope="scope">
+            <div v-html="scope.row.nickname"></div>
+            <div v-html="scope.row.created_at"></div>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="name"
-          label="选中商家"
-          width="100">
+          prop="pic_yx"
+          width="100"
+          label="营销图">
+          <template slot-scope="scope">
+            <img width="100" height="100" :src="scope.row.pic_yx" alt="营销图">
+          </template>
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="主图">
-        </el-table-column>
-        <el-table-column
-          prop="name"
+          prop="title"
           label="短标题"
           width="100">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="content"
           label="文案"
-          width="100">
+          width="200">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="price"
           label="券后价"
-          width="100">
+          width="80">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="yhq_price"
           label="优惠券"
-          width="100">
+          width="70">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="statusName"
           label="状态"
-          width="100">
+          width="70">
         </el-table-column>
         <el-table-column
           prop="name"
           label="操作"
-          width="180">
+          width="210">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="detail(scope.row.url)">查看</el-button>
+            <el-button
+              size="mini"
+              type="primary"
+              @click="pass(scope.row.id)" plain>通过</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="turnDown(scope.row.id)">拒绝</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -109,7 +128,6 @@ export default {
   name:"t-to-audit",
   data(){
     return {
-      count:0,
       goodsEndPriceBefore:"",
       goodsEndPriceAfter:"",
       ticketPrice:"",
@@ -183,11 +201,32 @@ export default {
       }).then(res => {
         if(res.code == 0){
           _this.tableData = res.data.list;
+          util.forInTime(_this.tableData,"created_at");
+          util.forInSelName(_this.tableData,"get_user_id");
+          util.forInStatus(_this.tableData,"status");
+          util.forInPrice(_this.tableData,"price")
+          util.forInPrice(_this.tableData,"yhq_price")
           _this.totalNum = parseFloat(res.data.total);
         } 
         
       });
       
+    },
+    detail:function(url){
+      window.open(url)
+    },
+    pass:function(id){
+      let _this = this;
+      util.pass(this,id).then(() => {
+        _this.table();
+      });
+
+    },
+    turnDown:function(id){
+      let _this = this;
+      util.turnDown(this,id).then(() => {
+        _this.table();
+      });
     }
     
   }

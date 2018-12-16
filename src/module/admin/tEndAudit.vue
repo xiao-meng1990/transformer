@@ -6,7 +6,7 @@
         size="small" :type="item.id==selectId?'primary':''" 
         @click="select(item.id)" 
         plain
-      >{{item.name}}({{item.count}})</el-button>
+      >{{item.name}}</el-button>
       <div class="m-t-20">
         <label class="m-r-10">劵后价</label>
         <el-input size="small" class="el-input" v-model="goodsEndPriceBefore">
@@ -24,9 +24,12 @@
         <el-select class="goods-type" v-model="classify" size="small" placeholder="分类" >
           <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
         </el-select>
-        <label class="m-r-10 m-l-30">状态</label>
-        <el-radio v-model="radio" label="1">已选中</el-radio>
-        <el-radio v-model="radio" label="2">未选中</el-radio>
+        <span v-show="selectId==1?true:false">
+          <label class="m-r-10 m-l-30">状态</label>
+          <el-radio v-model="radio" label="2">已选中</el-radio>
+          <el-radio v-model="radio" label="1">未选中</el-radio>
+        </span>
+        
       </div>
       <div class="m-t-20">
         <el-button 
@@ -55,48 +58,71 @@
         style="width: 100%"
         :highlight-current-Row="true">
         <el-table-column
-          prop="date"
           label="发布人/提交时间"
-          width="150">
+          width="130">
+          <template slot-scope="scope">
+            <div v-html="scope.row.nickname"></div>
+            <div v-html="scope.row.created_at"></div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="name"
           label="选中商家"
-          width="100">
+          width="90">
+          <template slot-scope="scope">
+            <div v-html="scope.row.get_nick_name==''?'暂无':scope.row.get_nick_name"></div>
+          </template>
         </el-table-column>
         <el-table-column
-          prop="address"
-          label="主图">
+          width="100"
+          label="营销图">
+          <template slot-scope="scope">
+            <img width="100" height="100" :src="scope.row.pic_yx" alt="营销图">
+          </template>
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="title"
           label="短标题"
           width="100">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="content"
           label="文案"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="券后价"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="优惠券"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="状态"
-          width="100">
-        </el-table-column>
-        <el-table-column
-          prop="name"
-          label="操作"
           width="180">
+        </el-table-column>
+        <el-table-column
+          prop="price"
+          label="券后价"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          prop="yhq_price"
+          label="优惠券"
+          width="70">
+        </el-table-column>
+        <el-table-column
+          prop="statusName"
+          label="状态"
+          width="70">
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="150">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="detail(scope.row.url)">查看</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              v-show="selectId==1?true:false"
+              @click="soldOut(scope.row.id)">下架</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              v-show="selectId==1?false:true"
+              @click="pass(scope.row.id)">撤销</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -123,7 +149,7 @@ export default {
         count:0
       },{
         name:"已拒绝",
-        id:4,
+        id:2,
         count:0
       }],
       dateButtonList:[{
@@ -133,7 +159,7 @@ export default {
         name:"今天",
         id:1
       }],
-      selectId:1,// 1 待选中；？？？？TODO
+      selectId:1,
       dateId:0,
       goodsEndPriceBefore:"",
       goodsEndPriceAfter:"",
@@ -142,9 +168,10 @@ export default {
       classify:"",
       currentPage: 1,
       totalNum:0,
-      radio: '1',
+      radio: '2',
       pageSize:"",
-      tableData:[]
+      tableData:[],
+      statusId:2,
     }
   },
   components: {
@@ -187,13 +214,14 @@ export default {
     },
     table:function(){
       let _this = this;
+      _this.statusId = _this.selectId==1?_this.radio:4;
       //淘客商品列表
       _this.$api.goodsList({
         price:_this.ticketPrice,  //券面额
         s_price:_this.goodsEndPriceBefore,  //筛选券后价  小
         e_price:_this.goodsEndPriceAfter,  //筛选券后价  大
         type:_this.classify,  //商品类型 鞋子等
-        status:_this.selectId,   //0 未审核 1 待选中 2 已选中  3 下架 4 未通过审核 5  已审核
+        status:_this.statusId,   //0 未审核 1 待选中 2 已选中  3 下架 4 未通过审核 5  已审核
         s_date:_this.startDate,
         e_date:_this.endDate,
         page:_this.currentPage,
@@ -201,9 +229,33 @@ export default {
       }).then(res => {
         if(res.code == 0){
           _this.tableData = res.data.list;
+          util.forInTime(_this.tableData,"created_at");
+          util.forInSelName(_this.tableData,"get_user_id");
+          util.forInStatus(_this.tableData,"status");
+          util.forInPrice(_this.tableData,"price")
+          util.forInPrice(_this.tableData,"yhq_price")
           _this.totalNum = parseFloat(res.data.total);
         } 
         
+      });
+      
+    },
+    detail:function(url){
+      window.open(url)
+    },
+    //下架
+    soldOut:function(id){
+      let _this = this;
+      util.soldOut(this,id).then(() => {
+        _this.table();
+      });
+      
+    },
+    //撤销拒绝 即通过审核
+    pass:function(id){
+      let _this = this;
+      util.pass(this,id).then(() => {
+        _this.table();
       });
       
     }

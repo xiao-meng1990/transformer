@@ -34,18 +34,24 @@
         style="width: 100%"
         :highlight-current-Row="true">
         <el-table-column
-          prop="date"
+          prop="created_at"
           label="提交时间"
           width="100">
         </el-table-column>
         <el-table-column
-          prop="name"
           label="选中商家"
           width="100">
+          <template slot-scope="scope">
+            <div v-html="scope.row.get_nick_name==''?'暂无':scope.row.get_nick_name"></div>
+          </template>
         </el-table-column>
+
         <el-table-column
           prop="pic_yx"
-          label="主图">
+          label="营销图">
+          <template slot-scope="scope">
+            <img width="100" height="100" :src="scope.row.pic_yx" alt="营销图">
+          </template>
         </el-table-column>
         <el-table-column
           prop="title"
@@ -53,29 +59,37 @@
           width="100">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="content"
           label="文案"
-          width="100">
+          width="200">
         </el-table-column>
         <el-table-column
           prop="price"
           label="券后价"
-          width="100">
+          width="80">
         </el-table-column>
         <el-table-column
           prop="yhq_price"
           label="优惠券"
-          width="100">
+          width="70">
         </el-table-column>
         <el-table-column
-          prop="name"
+          prop="statusName"
           label="状态"
-          width="100">
+          width="80">
         </el-table-column>
         <el-table-column
-          prop="name"
           label="操作"
-          width="180">
+          width="150">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="detail(scope.row.url)">查看</el-button>
+            <el-button
+              size="mini"
+              type="danger"
+              @click="soldOut(scope.row.id)">下架</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -100,11 +114,11 @@ export default {
       dates:"",
       selButtonList:[{
         name:"已选中",
-        id:1,
+        id:2,
         count:0
       },{
         name:"未选中",
-        id:2,
+        id:1,
         count:0
       }],
       dateButtonList:[{
@@ -114,7 +128,7 @@ export default {
         name:"今天",
         id:1
       }],
-      selectId:1,
+      selectId:2,
       dateId:0,
       startDate:"",
       endDate:"",
@@ -126,6 +140,9 @@ export default {
 
     }
   },
+  components: {
+    tPages
+  },
   mounted:function(){
     let _this = this;
     let userInfo = util.getStorJson("userInfo");
@@ -134,9 +151,6 @@ export default {
     _this.pageSize = this.$refs.headerChild.size;
     _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
     _this.table();
-  },
-  components: {
-    tPages
   },
   methods:{
     handleCurrentChange (val) {
@@ -174,6 +188,11 @@ export default {
       }).then(res => {
         if(res.code == 0){
           _this.tableData = res.data.list;
+          util.forInTime(_this.tableData,"created_at");
+          util.forInSelName(_this.tableData,"get_user_id");
+          util.forInStatus(_this.tableData,"status");
+          util.forInPrice(_this.tableData,"price")
+          util.forInPrice(_this.tableData,"yhq_price")
           _this.totalNum = parseFloat(res.data.total);
         } 
         
@@ -181,6 +200,16 @@ export default {
     },
     release:function(){
       this.$router.push({path:"../taoke/add"})
+    },
+    detail:function(url){
+      window.open(url)
+    },
+    soldOut:function(id){
+      let _this = this;
+      util.soldOut(this,id).then(() => {
+        _this.table();
+      });
+      
     }
   }
 }

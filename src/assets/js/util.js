@@ -49,11 +49,178 @@ function getDay(num, str) {
 	if (oDay.length <= 1) oDay = '0' + oDay;
 	return oYear + str + oMoth + str + oDay;
 }
+const formatShortDate = time => {
+  const date = new Date(parseFloat(time));
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  return [year, month, day].map(formatNumber).join('/');
+}
+const formatNumber = n => {
+  n = n.toString()
+  return n[1] ? n : '0' + n
+}
+function formatPrice(x) {
+	var f = parseFloat(x);  
+	if (isNaN(f)) {  
+			return;  
+	}  
+	f = Math.round(x*100)/100;  
+	return f;  
+}
+function forInTime(arr,index){
+	for(let i=0,j=arr.length;i<j;i++){
+		arr[i][index] = formatShortDate(arr[i][index]);
+	}
+}
+function forInSelName(arr,index){
+	for(let i=0,j=arr.length;i<j;i++){
+		let b = arr[i][index].split(',');
+		arr[i][index] = b.join("<br>");
+	}
+}
+function forInPrice(arr,index){
+	for(let i=0,j=arr.length;i<j;i++){
+		arr[i][index] = "￥"+formatPrice(arr[i][index]);
+	}
+}
+function forInStatus(arr,index){
+	for(let i=0,j=arr.length;i<j;i++){
+		switch (arr[i][index]) {
+			case "0":
+			arr[i].statusName = "未审核"
+				break;
+			case "1":
+			arr[i].statusName = "未选中"
+				break;
+			case "2":
+			arr[i].statusName = "已选中"
+				break;
+			case "3":
+			arr[i].statusName = "已下架"
+				break;
+			case "4":
+			arr[i].statusName = "未通过"
+				break;
+			case "5":
+			arr[i].statusName = "已审核"
+				break;
+			default:
+				break;
+		}
+	}
+}
+//下架商品
+function soldOut(that,id){
+	return new Promise((resolve, reject) => {
+		that.$confirm('此操作将下架该商品, 是否继续?', '提示', {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			type: 'error'
+		}).then(() => {
+			that.$api.changeStatus({
+				ids:id,
+				status:3
+			}).then(res => {
+				if(res.code == 0){
+					resolve();
+					that.$message({
+						type: 'success',
+						message: '下架成功!'
+					});
+				}
+				
+			})
+			
+		}).catch(() => {
+			reject();
+			that.$message({
+				type: 'info',
+				message: '已取消下架'
+			});          
+		});
+	})
+	
+}
+//通过商品
+function pass(that,id){
+	return new Promise((resolve, reject) => {
+		that.$confirm('此操作将审核通过该商品, 是否继续?', '提示', {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			type: 'error'
+		}).then(() => {
+			that.$api.changeStatus({
+				ids:id,
+				status:1
+			}).then(res => {
+				if(res.code == 0){
+					resolve();
+					that.$message({
+						type: 'success',
+						message: '通过审核!'
+					});
+				}
+				
+			})
+			
+		}).catch(() => {
+			reject();
+			that.$message({
+				type: 'info',
+				message: '已取消'
+			});          
+		});
+	})
+	
+}
+//拒绝通过商品
+function turnDown(that,id){
+	return new Promise((resolve, reject) => {
+		that.$confirm('此操作将拒绝通过该商品, 是否继续?', '提示', {
+			confirmButtonText: '确定',
+			cancelButtonText: '取消',
+			type: 'error'
+		}).then(() => {
+			that.$api.changeStatus({
+				ids:id,
+				status:4
+			}).then(res => {
+				if(res.code == 0){
+					resolve();
+					that.$message({
+						type: 'success',
+						message: '已拒绝!'
+					});
+				}
+				
+			})
+			
+		}).catch(() => {
+			reject();
+			that.$message({
+				type: 'info',
+				message: '已取消'
+			});          
+		});
+	})
+	
+}
 export default{
   setStorage,
   getStorage,
   clearStorage,
   setStorJson,
 	getStorJson,
-	getDay
+	getDay,
+	formatShortDate,
+	forInTime,
+	forInSelName,
+	forInStatus,
+	formatPrice,
+	forInPrice,
+	soldOut,
+	pass,
+	turnDown
 }

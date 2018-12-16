@@ -42,35 +42,15 @@
       </div>
     </div>
     <div class="list m-t-30">
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
-      <t-goods></t-goods>
+      <t-app-goods
+        v-for="item in tableData"
+        :ticketPrice="item.yhq_price"
+        :cardUrl="item.pic_yx"
+        :goodName="item.title"
+        :storeName="item.storeName"
+        :nickName="item.nickName"
+        :goodsCheapPrice="item.price"
+      ></t-app-goods>
     </div>
 
     <div class="m-t-20">
@@ -83,7 +63,7 @@
   </div>
 </template>
 <script>
-import tGoods from '@/components/tGoods.vue'
+import tAppGoods from '@/components/tAppGoods.vue'
 import tPages from '@/components/tPages.vue'
 import util from '../../assets/js/util.js'
 export default {
@@ -107,9 +87,10 @@ export default {
       startDate:"",
       endDate:"",
       currentPage: 1,
-      totalNum:"",
+      totalNum:0,
       pageSize:"",
-      tableData:[]
+      tableData:[],
+      selectId:""  //不传就是全部商品
     }
   },
   mounted:function(){
@@ -123,7 +104,7 @@ export default {
   },
   components: {
     tPages,
-    tGoods
+    tAppGoods
   },
   methods:{
     handleCurrentChange (val) {

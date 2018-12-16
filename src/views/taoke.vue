@@ -3,7 +3,7 @@
     <t-header>
       <el-dropdown>
         <span style="color:#ffffff;" class="el-dropdown-link">
-          您好：{{userName}}<i class="el-icon-arrow-down el-icon--right"></i>
+          您好：{{nickName}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>退出</el-dropdown-item>
@@ -33,7 +33,7 @@ export default {
   name: 'taoke',
   data(){
     return {
-      userName:"",
+      nickName:"",
       option:[{
         name:"首页",
         url:"/taoke/info"
@@ -60,7 +60,7 @@ export default {
   mounted:function(){
     let _this = this;
     let userInfo = util.getStorJson("userInfo");
-    _this.userName = userInfo.username;
+    _this.nickName = userInfo.nickname;
   },
   methods:{
     clickSelect:function(){

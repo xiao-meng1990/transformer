@@ -1,6 +1,9 @@
 <template>
   <div v-on:mouseover="mouseover"  v-on:mouseout="mouseout" class="goods">
     <div class="goods-ticket">券￥{{ticketPrice}}</div>
+    <div class="goods-select">
+      <img :src="selImg">
+    </div>
     <div class="goods-img">
       <img :src="cardUrl" alt="商品图片">
     </div>
@@ -20,8 +23,10 @@
 </template>
 <script>
 import avatar from '@/assets/images/zhanwei.png'
+import selOff from '@/assets/images/sel-off.png'
+import selOn from '@/assets/images/sel-on.png'
 export default {
-  name:"goods",
+  name:"t-app-goods",
   data(){
     return {
       focus:false
@@ -51,6 +56,10 @@ export default {
     goodsCheapPrice:{
       type:String,
       default:"0"
+    },
+    selImg:{
+      ype:String,
+      default:selOff
     }
   },
   methods:{
@@ -167,6 +176,17 @@ export default {
     background-color: #339bff;
     color: #ffffff;
     font-size: 20px;
+  }
+  .goods-select{
+    width: 22px;
+    height: 22px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .goods-select>img{
+    width: 22px;
+    height: 22px;
   }
 </style>
 

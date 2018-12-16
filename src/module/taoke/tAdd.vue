@@ -190,6 +190,7 @@ export default {
         price:_this.form.goodsPrice,
         yhq_price:_this.form.ticketPrice,
         taobao_id:_this.taobao_id,
+        content:_this.form.goodsDesc
       }).then(res => {
         if(res.code == 0){
           _this.$message({
