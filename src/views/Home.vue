@@ -2,10 +2,16 @@
   <div class="home">
     <!-- <img alt="Vue logo" src="../assets/logo.png"> -->
     <t-header>
-      <span class="xuan-pin" type="text">选品库</span>
+      <span @click="product" class="xuan-pin" type="text">选品库</span>
     </t-header>
     <t-main class="text-right">
-      <t-login class="location"></t-login>
+      <div class="home-box">
+        <div class="home-img">
+          <img width="440" height="528" src="../assets/images/login.png" alt="">
+        </div>
+        <t-login class="location"></t-login>
+      </div>
+      
     </t-main>
     <t-footer></t-footer>
   </div>
@@ -52,7 +58,9 @@ export default {
     
   },
   methods:{
-
+    product:function(){
+      this.$router.push({path:"/product"})
+    }
   }
 }
 </script>
@@ -62,7 +70,8 @@ export default {
     padding: 1px;
   }
   .location{
-    margin-top: 100px;
+    margin-top: 70px;
+    margin-right: 100px;
     display: inline-block;
   }
   .text-right{
@@ -71,6 +80,19 @@ export default {
   .xuan-pin{
     color: #ffffff;
     font-size: 14px;
+  }
+  .home-box{
+    border: 1px solid #fff;
+    border-radius: 20px;
+    width: 1200px;
+    box-shadow: 0px 0px 30px rgb(169, 217, 252);
+    position: relative;
+    height: 461px;
+  }
+  .home-img{
+    position: absolute;
+    top: 40px;
+    left: 50px;
   }
 </style>
 

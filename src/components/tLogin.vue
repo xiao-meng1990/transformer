@@ -92,13 +92,13 @@ export default {
       let _this =this;
       switch (type) {
         case "1":
-          _this.$router.push({path: "taoke"});
+          _this.$router.push({path: "/taoke/info"});
           break;
         case "2":
-          _this.$router.push({path: "admin"});
+          _this.$router.push({path: "/admin/start"});
           break;
         case "3":
-          _this.$router.push({path: "app"});
+          _this.$router.push({path: "/app/allgoods"});
           break;
         default:
           _this.$router.push({path: "product"});

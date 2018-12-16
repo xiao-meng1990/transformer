@@ -37,7 +37,13 @@
           @change="dateRange"
           :default-time="['00:00:00', '23:59:59']">
         </el-date-picker>
-        <el-button class="float-r" style="margin-left:10px" size="small" type="primary">选中并导出</el-button>
+        <el-button 
+          class="float-r" 
+          style="margin-left:10px" 
+          size="small" 
+          type="primary"
+          @click="submit"
+        >选中并导出</el-button>
         <el-button @click="query" class="float-r" size="small" type="primary">查询</el-button>
       </div>
     </div>
@@ -48,8 +54,13 @@
         :cardUrl="item.pic_yx"
         :goodName="item.title"
         :storeName="item.storeName"
-        :nickName="item.nickName"
+        :nickName="item.nickname"
         :goodsCheapPrice="item.price"
+        :id="item.id"
+        :taobaoUrl="item.url"
+        :statusId="item.status"
+        @add="addSelArr"
+        @minus="minusSelArr"
       ></t-app-goods>
     </div>
 
@@ -90,6 +101,7 @@ export default {
       totalNum:0,
       pageSize:"",
       tableData:[],
+      selected:[],
       selectId:""  //不传就是全部商品
     }
   },
@@ -149,6 +161,34 @@ export default {
         
       });
       
+    },
+    submit:function(){
+      let _this = this;
+      // 选中
+      if(_this.selected.length<1){
+        _this.$message({
+          message: '至少选一条商品哦！',
+          type: 'warning'
+        })
+        return false;
+      }
+      let selected = _this.selected.join();
+      console.log(selected);
+      _this.$api.selects({
+        ids: selected
+      }).then(res =>{
+        window.location.href = res.data;
+      });
+    },
+    addSelArr:function(val){
+      let _this = this;
+      _this.selected.push(val);
+      console.log(_this.selected)
+    },
+    minusSelArr:function(val){
+      let _this = this;
+      _this.selected.remove(val);
+      console.log(_this.selected)
     }
   }
 }

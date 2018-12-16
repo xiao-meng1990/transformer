@@ -4,7 +4,7 @@
     <div class="goods-select">
       <img :src="selImg">
     </div>
-    <div class="goods-img">
+    <div @click="selectGoods" class="goods-img">
       <img :src="cardUrl" alt="商品图片">
     </div>
     <div class="goods-info">
@@ -18,7 +18,7 @@
       </div>
     </div>
     <!-- 详情 -->
-    <div v-show="focus" class="goods-detail">查看详情</div>
+    <div v-show="focus" @click="lookDetail" class="goods-detail">查看详情</div>
   </div>
 </template>
 <script>
@@ -29,7 +29,9 @@ export default {
   name:"t-app-goods",
   data(){
     return {
-      focus:false
+      focus:false,
+      selImg:'',
+      checkedNames:false
     }
   },
   props:{
@@ -57,10 +59,22 @@ export default {
       type:String,
       default:"0"
     },
-    selImg:{
-      ype:String,
-      default:selOff
+    id:{
+      type:String,
+      default:0
+    },
+    taobaoUrl:{
+      type:String,
+      default:""
+    },
+    statusId:{
+      type:Number,
+      default:0
     }
+  },
+  mounted:function(){
+    this.selImg = this.statusId == 2?selOn:selOff;
+    this.checkedNames = this.statusId == 2?true:false;
   },
   methods:{
     mouseover:function(){
@@ -68,6 +82,25 @@ export default {
     },
     mouseout:function(){
       this.focus = false;
+    },
+    lookDetail:function(){
+      let _this = this;
+      window.open(_this.taobaoUrl)
+    },
+    selectGoods:function(){
+      let _this = this;
+      if(_this.statusId==2){
+        return false;
+      }else{
+        if(_this.selImg==selOff){
+          _this.selImg = selOn;
+          _this.$emit('add', _this.id);
+        }else{
+          _this.selImg = selOff;
+          _this.$emit('minus', _this.id);
+        }
+        
+      }
     }
   }
 }

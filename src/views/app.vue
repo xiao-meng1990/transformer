@@ -1,7 +1,14 @@
 <template>
   <div class="taoke">
     <t-header>
-      <el-button type="text">选品库</el-button>
+      <el-dropdown  @command="logout">
+        <span style="color:#ffffff;" class="el-dropdown-link">
+          您好：{{nickName}}<i class="el-icon-arrow-down el-icon--right"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>退出</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
     </t-header>
     <t-main>
       <div class="tab-box">
@@ -21,11 +28,13 @@ import tMain from '@/components/tMain.vue'
 import tFooter from '@/components/tFooter.vue'
 import tLeftTab from '@/components/tLeftTab.vue'
 import tPages from '@/components/tPages.vue'
+import util from '../assets/js/util.js'
 
 export default {
   name: 'taoke',
   data(){
     return {
+      nickName:"",
       option:[{
         name:"全部商品",
         url:"/app/allgoods"
@@ -43,9 +52,33 @@ export default {
     tPages,
     tLeftTab
   },
+  created:function(){
+    this.pagePath();
+  },
+  mounted:function(){
+    let _this = this;
+    let userInfo = util.getStorJson("userInfo");
+    _this.nickName = userInfo.nickname;
+  },
   methods:{
-    clickSelect:function(){
-
+    logout:function(){
+      util.clearStorage();
+      this.$router.push({path:"/"})
+    },
+    pagePath:function(){
+      let _this = this;
+      let _path = this.$route.path;
+      switch (_path) {
+        case '/app/allgoods':
+          _this.def = 0;
+          break;
+        case '/app/selgoods':
+          _this.def = 1;
+          break;
+        default:
+          _this.def = 0;
+          break;
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="taoke">
     <t-header>
-      <el-dropdown>
+      <el-dropdown  @command="logout">
         <span style="color:#ffffff;" class="el-dropdown-link">
           您好：{{nickName}}<i class="el-icon-arrow-down el-icon--right"></i>
         </span>
@@ -57,14 +57,40 @@ export default {
     tPages,
     tLeftTab
   },
+  created:function(){
+    this.pagePath();
+  },
   mounted:function(){
     let _this = this;
     let userInfo = util.getStorJson("userInfo");
     _this.nickName = userInfo.nickname;
+    
   },
   methods:{
-    clickSelect:function(){
-
+    logout:function(){
+      util.clearStorage();
+      this.$router.push({path:"/"})
+    },
+    pagePath:function(){
+      let _this = this;
+      let _path = this.$route.path;
+      switch (_path) {
+        case '/taoke/info':
+          _this.def = 0;
+          break;
+        case '/taoke/add':
+          _this.def = 1;
+          break;
+        case '/taoke/goods':
+          _this.def = 2;
+          break;
+        case '/taoke/user':
+          _this.def = 3;
+          break;
+        default:
+          _this.def = 0;
+          break;
+      }
     }
   }
 }

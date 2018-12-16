@@ -15,11 +15,13 @@
       </div>
     </div>
     <!-- 详情 -->
-    <div v-show="focus" class="goods-detail">查看详情</div>
+    <div v-show="focus" @click="lookDetail" class="goods-detail">查看详情</div>
   </div>
 </template>
 <script>
 import avatar from '@/assets/images/zhanwei.png'
+import selOff from '@/assets/images/sel-off.png'
+import selOn from '@/assets/images/sel-on.png'
 export default {
   name:"goods",
   data(){
@@ -51,6 +53,10 @@ export default {
     goodsCheapPrice:{
       type:String,
       default:"0"
+    },
+    taobaoUrl:{
+      type:String,
+      default:""
     }
   },
   methods:{
@@ -59,7 +65,11 @@ export default {
     },
     mouseout:function(){
       this.focus = false;
-    }
+    },
+    lookDetail:function(){
+      let _this = this;
+      window.open(_this.taobaoUrl)
+    },
   }
 }
 </script>

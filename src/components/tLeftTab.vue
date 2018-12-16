@@ -26,6 +26,7 @@ export default {
   },
   mounted:function(){
     let _this = this;
+    console.log(this.$route.path);
     this.selName = this.list[this.def].name;
     this.$router.push({ path: _this.list[_this.def].url })
   },

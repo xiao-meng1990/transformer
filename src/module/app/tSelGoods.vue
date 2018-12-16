@@ -37,7 +37,7 @@
           @change="dateRange"
           :default-time="['00:00:00', '23:59:59']">
         </el-date-picker>
-        <el-button class="float-r" size="small" type="primary">导出</el-button>
+        <el-button @click="submit" class="float-r" size="small" type="primary">导出</el-button>
       </div>
     </div>
     <div class="list m-t-30">
@@ -47,8 +47,11 @@
         :cardUrl="item.pic_yx"
         :goodName="item.title"
         :storeName="item.storeName"
-        :nickName="item.nickName"
+        :nickName="item.nickname"
         :goodsCheapPrice="item.price"
+        :id="item.id"
+        :taobaoUrl="item.url"
+        :statusId="item.status"
       ></t-app-goods>
     </div>
 
@@ -89,6 +92,7 @@ export default {
       totalNum:0,
       pageSize:"",
       tableData:[],
+      selected:[],
       selectId:"2" 
     }
   },
@@ -148,6 +152,10 @@ export default {
         
       });
       
+    },
+    submit:function(){
+      // TODO
+      this.$message("还没做")
     }
   }
 }
