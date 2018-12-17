@@ -2,7 +2,7 @@
   <div id="app">
     <!-- <router-link to="/"><el-button>home</el-button></router-link>
     <router-link to="/about"><el-button size="small">about</el-button></router-link> -->
-    <router-view/>
+    <router-view v-if="isRouterAlive" />
   </div>
 </template>
 
@@ -13,6 +13,24 @@ export default {
   name: 'app',
   components: {
     HelloWorld
+  },
+  provide(){
+    return {
+      reload: this.reload
+    }
+  },
+  data(){
+    return {
+      isRouterAlive: true
+    }
+  },
+  methods:{
+    reload(){
+      this.isRouterAlive = false
+      this.$nextTick(function(){
+        this.isRouterAlive = true
+      })
+    }
   }
 }
 </script>

@@ -15,7 +15,6 @@ const getUserInfo = params => {
 const setUserInfo = params => {
   return fetch.post('user/update',params)
 }
-
 //添加用户
 const addUser = params => {
   return fetch.post('goods/add-user',params)

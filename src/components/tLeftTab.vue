@@ -28,7 +28,7 @@ export default {
     let _this = this;
     console.log(this.$route.path);
     this.selName = this.list[this.def].name;
-    this.$router.push({ path: _this.list[_this.def].url })
+    // this.$router.push({ path: _this.list[_this.def].url })
   },
   methods:{
     selected:function(obj){

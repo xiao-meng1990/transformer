@@ -13,14 +13,14 @@
         <p class="font-size-50 green">{{sel}}</p>
         <div>
           <span>已选中</span>
-          <el-button type="text">[查看]</el-button>
+          <el-button @click="lookAt(2)" type="text">[查看]</el-button>
         </div>
       </div>
       <div class="home-noselected">
         <p class="font-size-50 pink">{{unSel}}</p>
         <div>
           <span>未选中</span>
-          <el-button type="text">[查看]</el-button>
+          <el-button @click="lookAt(1)" type="text">[查看]</el-button>
         </div>
       </div>
     </div>
@@ -34,15 +34,14 @@ export default {
     return {
       money:0,
       sel:0,
-      unSel:0
+      unSel:0,
+      userInfo:{}
     }
   },
+  inject:['reload'],
   mounted:function(){
     let _this = this;
-    let userInfo = util.getStorJson("userInfo");
-    _this.money = userInfo.money;
-    _this.sel = userInfo.selected_num;
-    _this.unSel = userInfo.unselected_num;
+    _this.getUserInfo();
 
   },
   methods:{
@@ -51,6 +50,30 @@ export default {
         message: '此功能暂未开放',
         type: 'warning'
       });
+    },
+    lookAt:function(selId){
+      this.$router.push({
+        path: '../taoke/goods',
+        query: {
+          id: selId
+        }
+      })
+      this.reload();
+    },
+    getUserInfo:function(){
+      let _this = this;
+      _this.$api.getUserInfo().then(res => {
+        console.log(res)
+        if(res.code == 0){
+          util.setStorJson("userInfo",res.data);
+          _this.userInfo = res.data;
+          _this.money = _this.userInfo.money;
+          _this.sel = _this.userInfo.selected_num;
+          _this.unSel = _this.userInfo.unselected_num;
+        }else{
+           _this.$message.error(res.msg);
+        }
+      })
     }
   }
 

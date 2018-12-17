@@ -143,9 +143,14 @@ export default {
   components: {
     tPages
   },
+  inject:['reload'],
   mounted:function(){
     let _this = this;
     let userInfo = util.getStorJson("userInfo");
+    let _id = this.$route.query.id;
+    if(_id){
+      _this.selectId = _id;
+    }
     _this.selButtonList[0].count = userInfo.selected_num;
     _this.selButtonList[1].count = userInfo.unselected_num;
     _this.pageSize = this.$refs.headerChild.size;
@@ -200,6 +205,7 @@ export default {
     },
     release:function(){
       this.$router.push({path:"../taoke/add"})
+      this.reload();
     },
     detail:function(url){
       window.open(url)

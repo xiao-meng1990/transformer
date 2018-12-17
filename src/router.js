@@ -43,6 +43,7 @@ export default new Router({
     {
       path: '/taoke',
       name: 'taoke',
+      redirect: '/taoke/info',
       component: taoke,
       children: [
         {
@@ -70,6 +71,7 @@ export default new Router({
     {
       path: '/admin',
       name: 'admin',
+      redirect: '/admin/start',
       component: admin,
       children: [
         {
@@ -92,6 +94,7 @@ export default new Router({
     {
       path: '/app',
       name: 'app',
+      redirect: '/app/allgoods',
       component: app,
       children: [
         {

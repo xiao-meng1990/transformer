@@ -9,11 +9,9 @@
       </div>
       <div class="hint-info">
         <p class="hint-title">重要提醒：</p>
-        <p>1.xxxxxxxxxxxxxxxxxxxxxxxxx</p>
-        <p>2.xxxxxxxxxxxxxxxxxxxxxxxxx</p>
-        <p>3.xxxxxxxxxxxxxxxxxxxxxxxxx</p>
-        <p>4.xxxxxxxxxxxxxxxxxxxxxxxxx</p>
-        <p>5.xxxxxxxxxxxxxxxxxxxxxxxxx</p>
+        <p>1、务必确保信息准确无误再提交！</p>
+        <p>2、确保已经和商家对接清楚，切勿中途调整价格和佣金！</p>
+        <p>3、若中途商品有变化，请及时在线修改或者下架商品！</p>
       </div>
     </div>
 
