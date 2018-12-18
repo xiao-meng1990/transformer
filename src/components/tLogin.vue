@@ -13,8 +13,12 @@
       </el-tab-pane>
       <el-tab-pane name="register" label="注册">
         <el-input class="m-b-15 m-t-15" v-model="rPhone" type="text" placeholder="请输入手机号"></el-input>
+        <div class="login-code">
+          <el-input class="m-b-15 code-input" v-model="rCode" type="text" placeholder="请输入验证码"></el-input>
+          <el-button type="primary" class="code-button" @click="getCode" :disabled="!codeType">{{codeText}}</el-button>
+        </div>
+        
         <el-input class="m-b-15" v-model="rPassword" type="password" placeholder="请输入密码"></el-input>
-        <el-input class="m-b-15" v-model="rAgainPassword" type="password" placeholder="重新输入密码"></el-input>
         <el-button class="width100" type="primary" @click="register">注册</el-button>
         <div>
           <el-button @click="goLogin" class="right m-l-0" type="text">登录</el-button>
@@ -32,9 +36,12 @@ export default {
       lPhone:"",
       lPassword:"",
       rPhone:"",
+      rCode:"",
       rPassword:"",
       rAgainPassword:"",
-      sel:"login"
+      sel:"login",
+      codeText:"获取验证码",
+      codeType:true
     }
   },
   methods:{
@@ -64,11 +71,53 @@ export default {
         }
       });
     },
+    getCode:function(){
+      let _this = this;
+      let phoneReg = util.isValidMobile(_this.rPhone);
+      if(!phoneReg){
+        _this.$message({
+          type:"error",
+          message:"手机号错误，请重新填写"
+        })
+        return false
+      }
+      util.settime(10,function(_text,_codeType){
+        _this.codeText = _text;
+        _this.codeType = _codeType;
+      });
+      // _this.$api.getCode({
+      //   phone:_this.rPhone
+      // }).then(res => {
+      //   console.log(res)
+      // });
+    },
     register:function(){
       //注册
       let _this = this;
-      console.log(_this.rPhone+"....."+_this.rPassword);
+      let phoneReg = util.isValidMobile(_this.rPhone);
+      if(!phoneReg){
+        _this.$message({
+          type:"error",
+          message:"手机号错误，请重新填写"
+        })
+        return false
+      }
+      if(!_this.rCode){
+        _this.$message({
+          type:"error",
+          message:"请填写验证码"
+        })
+        return false
+      }
+      if(!_this.rPassword){
+        _this.$message({
+          type:"error",
+          message:"请填写密码"
+        })
+        return false
+      }
       this.$api.register({
+        code:_this.rCode,
         phone:_this.rPhone,
         pass:_this.rPassword
       }).then(res => {
@@ -129,6 +178,18 @@ export default {
   }
   .right{
     float: right;
+  }
+  .login-code{
+    width: 100%;
+    text-align: left;
+  }
+  .code-input{
+    width: 200px;
+  }
+  .code-button{
+    float: right;
+    width: 120px;
+    margin-left: 14px;
   }
 </style>
 

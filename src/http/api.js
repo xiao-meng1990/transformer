@@ -52,6 +52,10 @@ const taokeList = params => {
 const selects = params => {
   return fetch.post('/goods/selects',params)  //app
 }
+//获取验证码
+const getCode = params => {
+  return fetch.post('',params)
+}
 export default {
   login,
   register,
@@ -65,5 +69,6 @@ export default {
   selects,
   listApp,
   taokeList,
-  setUserInfo
+  setUserInfo,
+  getCode
 }

@@ -201,7 +201,7 @@ export default {
       _this.dateId = index;
       _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
       _this.endDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.table();
+      // _this.table();
     },
     dateRange:function(d){
       let _this = this;

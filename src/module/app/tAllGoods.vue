@@ -15,7 +15,7 @@
           <template slot="append">元</template>
         </el-input>
         <label class="m-r-10 m-l-30">类别</label>
-        <el-select class="goods-type" v-model="classify" size="small" placeholder="分类" >
+        <el-select class="goods-type" v-model="classify" size="small" >
           <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
         </el-select>
       </div>
@@ -85,7 +85,7 @@ export default {
       goodsEndPriceAfter:"",
       ticketPrice:"",
       dates:"",
-      classify:"",
+      classify:0,
       dateButtonList:[{
         name:"昨天",
         id:2

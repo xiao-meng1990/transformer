@@ -122,6 +122,8 @@ export default {
     let token = util.getStorage("token");
     if(token){
       _this.isLogin = true;
+      let userInfo = util.getStorJson("userInfo");
+      _this.nickName = userInfo.nickname;
     }else{
       _this.isLogin = false;
     }
@@ -166,7 +168,6 @@ export default {
         e_date:_this.endDate,
         page:_this.currentPage,
         pageSize:_this.pageSize,
-        user_id:""
       }).then(res =>{
         if(res.code == 0){
           _this.tableData = res.data.list;

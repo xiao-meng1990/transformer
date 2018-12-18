@@ -207,6 +207,26 @@ function turnDown(that,id){
 	})
 	
 }
+// 验证手机号
+function isValidMobile(n) {
+  return n ? /^\+((?!(86|1|81|65))[0-9]\d{7,}|(1)[0-9]{10}|(81)[0-9]{11}|(65)[0-9]{8})$/.test(n) ? !0 : /^(13[0-9]|15[012356789]|17[01235678]|18[0-9]|14[579]|19[89]|166)[0-9]{8}$/.test(n) ? !0 : !1 : !1
+}
+// 验证码
+function settime(time,countdown) {
+  var _time = time;
+  var _countdown = countdown;
+  if (_time == 0) {
+    countdown("重新获取",true);
+    _time = time;  
+    return false;  
+  } else {
+    countdown("重新获取（"+_time+"）",false);
+    _time--; 
+  }  
+  setTimeout(function() {  
+    settime(_time,_countdown);  
+  },1000);  
+}
 Array.prototype.indexOf = function(val) {
 	for (var i = 0; i < this.length; i++) {
 		if (this[i] == val) return i;
@@ -234,5 +254,7 @@ export default{
 	forInPrice,
 	soldOut,
 	pass,
-	turnDown
+	turnDown,
+	isValidMobile,
+	settime
 }

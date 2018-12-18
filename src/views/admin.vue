@@ -64,6 +64,17 @@ export default {
     let _this = this;
     let userInfo = util.getStorJson("userInfo");
     _this.nickName = userInfo.nickname;
+    _this.userType = userInfo.user_type;
+    if(_this.userType!=2){
+      _this.$message({
+        type:"error",
+        message:"你没有此权限"
+      });
+      setTimeout(function(){
+        _this.$router.push({path:"/"})
+      },500)
+      
+    }
   },
   methods:{
     logout:function(){
