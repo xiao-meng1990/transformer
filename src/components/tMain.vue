@@ -12,8 +12,12 @@ export default {
     }
   },
   beforeMount(){
-    var winH = document.documentElement.clientHeight;
-    var minHeight = winH - 206;
+    let url = this.$route.path;
+    let winH = document.documentElement.clientHeight;
+    let minHeight = winH - 206;
+    if(url=="/"){
+      minHeight = winH - 296;
+    }
     this.minH = minHeight;
   }
 }

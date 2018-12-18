@@ -88,6 +88,8 @@ export default {
     box-shadow: 0px 0px 30px rgb(169, 217, 252);
     position: relative;
     height: 461px;
+    margin-top:80px;
+    margin-bottom: 120px; 
   }
   .home-img{
     position: absolute;
