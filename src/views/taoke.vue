@@ -27,7 +27,6 @@ import tHeader from '@/components/tHeader.vue'
 import tMain from '@/components/tMain.vue'
 import tFooter from '@/components/tFooter.vue'
 import tLeftTab from '@/components/tLeftTab.vue'
-import tPages from '@/components/tPages.vue'
 import util from '../assets/js/util.js'
 export default {
   name: 'taoke',
@@ -55,7 +54,6 @@ export default {
     tFooter,
     tHeader,
     tMain,
-    tPages,
     tLeftTab
   },
   created:function(){

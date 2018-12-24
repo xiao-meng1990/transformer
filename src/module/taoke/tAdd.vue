@@ -58,7 +58,7 @@
             <el-input v-model="form.ticketUrl" placeholder="填写优惠券链接"></el-input>
           </el-form-item>
 
-          <el-form-item label="优惠券链接">
+          <el-form-item label="券总量">
             <el-input placeholder="券原始总量" v-model="form.ticketTotalNum">
               <template slot="append">张</template>
             </el-input>
@@ -99,6 +99,7 @@ export default {
       buttonType:"1",//1 校验 2 下一步
       loading:false,
       taobao_id:"",
+      shopName:"",
       form: {
         goodsUrl:"",
         classify:"",
@@ -159,6 +160,7 @@ export default {
               type: 'success'
             });
             _this.taobao_id = res.data.taobao_id;
+            _this.shopName = res.data.shop_name;
             _this.form.goodsUrl = "https://item.taobao.com/item.html?id="+_this.taobao_id;
             _this.buttonType = 2;
             console.log(res);
@@ -188,6 +190,7 @@ export default {
         price:_this.form.goodsPrice,
         yhq_price:_this.form.ticketPrice,
         taobao_id:_this.taobao_id,
+        shop_name:_this.shopName,
         content:_this.form.goodsDesc
       }).then(res => {
         if(res.code == 0){

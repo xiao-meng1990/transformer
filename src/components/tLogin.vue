@@ -17,7 +17,6 @@
           <el-input class="m-b-15 code-input" v-model="rCode" type="text" placeholder="请输入验证码"></el-input>
           <el-button type="primary" class="code-button" @click="getCode" :disabled="!codeType">{{codeText}}</el-button>
         </div>
-        
         <el-input class="m-b-15" v-model="rPassword" type="password" placeholder="请输入密码"></el-input>
         <el-button class="width100" type="primary" @click="register">注册</el-button>
         <div>
@@ -85,11 +84,18 @@ export default {
         _this.codeText = _text;
         _this.codeType = _codeType;
       });
-      // _this.$api.getCode({
-      //   phone:_this.rPhone
-      // }).then(res => {
-      //   console.log(res)
-      // });
+      _this.$api.getCode({
+        phone:_this.rPhone
+      }).then(res => {
+        if(res.code==0){
+          _this.$message({
+            type:"success",
+            message:"发送成功，请注意查收"
+          })
+        }else{
+          _this.$message(res.msg)
+        }
+      });
     },
     register:function(){
       //注册
@@ -117,11 +123,18 @@ export default {
         return false
       }
       this.$api.register({
-        code:_this.rCode,
+        yzm:_this.rCode,
         phone:_this.rPhone,
         pass:_this.rPassword
       }).then(res => {
-        console.log(res)
+        if(res.code==0){
+          _this.$message({
+            type:"success",
+            message:"注册成功，请去登录"
+          })
+        }else{
+          _this.$message(res.msg)
+        }
       });
     },
     userInfo:function(){

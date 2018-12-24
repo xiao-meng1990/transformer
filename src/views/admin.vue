@@ -27,8 +27,6 @@ import tHeader from '@/components/tHeader.vue'
 import tMain from '@/components/tMain.vue'
 import tFooter from '@/components/tFooter.vue'
 import tLeftTab from '@/components/tLeftTab.vue'
-import tPages from '@/components/tPages.vue'
-import tToAudit from '@/module/admin/tToAudit.vue'
 import util from '../assets/js/util.js'
 
 export default {
@@ -53,8 +51,6 @@ export default {
     tFooter,
     tHeader,
     tMain,
-    tPages,
-    tToAudit,
     tLeftTab
   },
   created:function(){
@@ -73,7 +69,6 @@ export default {
       setTimeout(function(){
         _this.$router.push({path:"/"})
       },500)
-      
     }
   },
   methods:{

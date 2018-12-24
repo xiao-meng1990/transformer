@@ -9,7 +9,7 @@
       >{{item.name}}({{item.count}})</el-button>
       <el-button @click="release" size="small" type="primary" style="float:right">发布商品</el-button>
       <div class="m-t-20">
-        <el-button 
+        <el-button
           v-for="item in dateButtonList" 
           size="small" :type="item.id==dateId?'primary':''" 
           @click="selectDate(item.id)" 
@@ -159,8 +159,7 @@ export default {
   },
   methods:{
     handleCurrentChange (val) {
-      console.log(val);
-      _this.currentPage = val;
+      this.currentPage = val;
       this.table();
     },
     select:function(index){

@@ -46,7 +46,7 @@
         :ticketPrice="item.yhq_price"
         :cardUrl="item.pic_yx"
         :goodName="item.title"
-        :storeName="item.storeName"
+        :storeName="item.shop_name"
         :nickName="item.nickname"
         :goodsCheapPrice="item.price"
         :id="item.id"
@@ -148,14 +148,14 @@ export default {
         if(res.code == 0){
           _this.tableData = res.data.list;
           _this.totalNum = parseFloat(res.data.total);
-        } 
-        
+        }
       });
-      
     },
     submit:function(){
-      // TODO
-      this.$message("还没做")
+      let _this = this;
+       _this.$api.allcsv().then(res => {
+         window.location.href = res.data;
+       });
     }
   }
 }

@@ -17,9 +17,9 @@ export default {
   name: 't-footer',
   data(){
     return {
-      companyInfo: "© CopyRight 2011-2018  |  沪ICP备237816378号  |  经营许可证：沪B2-20288229  |  经营许可证：沪B2-20288229 ",
-      serviceTel:"400-3728-3238",
-      callUs:"188-8888-8888"
+      companyInfo: "© CopyRight 2018-2020  |  沪ICP备23781789号  |  经营许可证：沪B2-202776729",
+      serviceTel:"155-0214-2795",
+      callUs:"155-0214-2795"
     }
   }
 }

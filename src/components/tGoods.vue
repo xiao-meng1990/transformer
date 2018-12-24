@@ -139,6 +139,9 @@ export default {
     padding-bottom: 5px;
   }
   .goods-bottom div{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     font-size: 16px;
     color: #999999;
     padding: 3px;

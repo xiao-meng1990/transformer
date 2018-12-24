@@ -53,7 +53,7 @@
         :ticketPrice="item.yhq_price"
         :cardUrl="item.pic_yx"
         :goodName="item.title"
-        :storeName="item.storeName"
+        :storeName="item.shop_name"
         :nickName="item.nickname"
         :goodsCheapPrice="item.price"
         :id="item.id"

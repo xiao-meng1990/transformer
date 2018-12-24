@@ -57,7 +57,7 @@
         :ticketPrice="item.yhq_price"
         :cardUrl="item.pic_yx"
         :goodName="item.title"
-        :storeName="item.storeName"
+        :storeName="item.shop_name"
         :nickName="item.nickname"
         :goodsCheapPrice="item.price"
         :id="item.id"
@@ -161,7 +161,7 @@ export default {
     },
     table:function(){
       let _this =this;
-      _this.$api.listApp({
+      _this.$api.xuanpinku({
         type:_this.selectId,
         status:"",
         s_date:_this.startDate,
