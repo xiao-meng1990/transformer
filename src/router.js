@@ -14,6 +14,8 @@ import tInfo from "./module/taoke/tInfo.vue";
 import tUser from "./module/taoke/tUser.vue";
 import tAllGoods from "./module/app/tAllGoods.vue";
 import tSelGoods from "./module/app/tSelGoods.vue";
+import ticketInfo from "./views/ticketInfo.vue";
+import ticketAmend from "./views/ticketAmend.vue";
 
 Vue.use(Router);
 
@@ -26,6 +28,17 @@ export default new Router({
       path: "/",
       name: "home",
       component: Home
+    },
+    {
+      path: "/ticketinfo",
+      // path: "/ticketinfo/:id",
+      name: "ticketinfo",
+      component: ticketInfo
+    },
+    {
+      path: "/ticketamend/:id",
+      name: "ticketamend",
+      component: ticketAmend
     },
     {
       path: "/product",

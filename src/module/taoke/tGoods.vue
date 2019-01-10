@@ -6,17 +6,10 @@
         size="small" :type="item.id==selectId?'primary':''" 
         @click="select(item.id)" 
         plain
-      >{{item.name}}({{item.count}})</el-button>
+      >{{item.name}}</el-button>
       <el-button @click="release" size="small" type="primary" style="float:right">发布商品</el-button>
       <div class="m-t-20">
-        <el-button
-          v-for="item in dateButtonList" 
-          size="small" :type="item.id==dateId?'primary':''" 
-          @click="selectDate(item.id)" 
-          plain
-        >{{item.name}}</el-button>
         <el-date-picker
-          class="m-l-20"
           size="small"
           value-format="yyyy-MM-dd"
           v-model="dates"
@@ -31,16 +24,19 @@
     <div class="m-t-30">
       <el-table
         :data="tableData"
-        style="width: 100%"
+        style="width: 100%;font-size:13px;"
         :highlight-current-Row="true">
         <el-table-column
           prop="created_at"
           label="提交时间"
-          width="100">
+          width="80">
+          <template slot-scope="scope">
+            <div v-html="scope.row.created_at"></div>
+          </template>
         </el-table-column>
         <el-table-column
           label="选中商家"
-          width="100">
+          width="80">
           <template slot-scope="scope">
             <div v-html="scope.row.get_nick_name==''?'暂无':scope.row.get_nick_name"></div>
           </template>
@@ -48,25 +44,32 @@
 
         <el-table-column
           prop="pic_yx"
+          width="90"
           label="营销图">
           <template slot-scope="scope">
-            <img width="100" height="100" :src="scope.row.pic_yx" alt="营销图">
+            <img width="80" height="80" :src="scope.row.pic_yx" alt="营销图">
           </template>
         </el-table-column>
         <el-table-column
           prop="title"
           label="短标题"
-          width="100">
+          width="120">
+          <template slot-scope="scope">
+            <div class="row-height" v-html="scope.row.title"></div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="content"
           label="文案"
-          width="200">
+          width="160">
+          <template slot-scope="scope">
+            <div class="row-height" v-html="scope.row.content"></div>
+          </template>
         </el-table-column>
         <el-table-column
           prop="price"
           label="券后价"
-          width="80">
+          width="70">
         </el-table-column>
         <el-table-column
           prop="yhq_price"
@@ -74,21 +77,31 @@
           width="70">
         </el-table-column>
         <el-table-column
-          prop="statusName"
-          label="状态"
+          label="起止时间"
+          width="90">
+          <template slot-scope="scope">
+            <div v-html="scope.row.yhq_stime"></div>
+            <div>至</div>
+            <div v-html="scope.row.yhq_etime"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="yong_jin"
+          label="佣金比例"
           width="80">
         </el-table-column>
         <el-table-column
+          prop="statusName"
+          label="状态"
+          width="70">
+        </el-table-column>
+        <el-table-column
           label="操作"
-          width="150">
+          width="60">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="detail(scope.row.url)">查看</el-button>
-            <el-button
-              size="mini"
-              type="danger"
-              @click="soldOut(scope.row.id)">下架</el-button>
+            <div class="btn" @click="detail(scope.row.url)">查看</div>
+            <div class="btn" @click="amend(scope.row.id)">修改</div>
+            <div class="btn" @click="soldOut(scope.row.id)">下架</div>
           </template>
         </el-table-column>
       </el-table>
@@ -115,21 +128,17 @@ export default {
       selButtonList:[{
         name:"已选中",
         id:2,
-        count:0
       },{
         name:"未选中",
         id:1,
-        count:0
-      }],
-      dateButtonList:[{
-        name:"昨天",
-        id:2
       },{
-        name:"今天",
-        id:1
+        name:"未开始",
+        id:3,//待定
+      },{
+        name:"无效商品",
+        id:4,//待定
       }],
       selectId:2,
-      dateId:0,
       startDate:"",
       endDate:"",
       currentPage: 1,
@@ -151,8 +160,6 @@ export default {
     if(_id){
       _this.selectId = _id;
     }
-    _this.selButtonList[0].count = userInfo.selected_num;
-    _this.selButtonList[1].count = userInfo.unselected_num;
     _this.pageSize = this.$refs.headerChild.size;
     _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
     _this.table();
@@ -165,13 +172,6 @@ export default {
     select:function(index){
       this.selectId = index;
       this.table();
-    },
-    selectDate:function(index){
-      let _this = this;
-      _this.dateId = index;
-      _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.endDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.table();
     },
     dateRange:function(d){
       let _this = this;
@@ -197,6 +197,10 @@ export default {
           util.forInStatus(_this.tableData,"status");
           util.forInPrice(_this.tableData,"price")
           util.forInPrice(_this.tableData,"yhq_price")
+          util.forInYongjin(_this.tableData,"yong_jin")
+          util.forInTime3(_this.tableData,"yhq_stime")
+          util.forInTime3(_this.tableData,"yhq_etime")
+          
           _this.totalNum = parseFloat(res.data.total);
         } 
         
@@ -215,6 +219,11 @@ export default {
         _this.table();
       });
       
+    },
+    amend:function(id){
+      this.$router.push({
+        path: `/ticketamend/${id}`,
+      })
     }
   }
 }
@@ -228,6 +237,15 @@ export default {
   padding: 20px;
   background-color: #ffffff;
   position: relative;
+}
+.btn{
+  color: #007bff;
+  font-size: 13px;
+  cursor: pointer;
+}
+.row-height{
+  max-height: 132px;
+  overflow: hidden;
 }
 </style>
 

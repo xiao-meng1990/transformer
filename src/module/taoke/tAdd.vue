@@ -23,6 +23,13 @@
           <el-form-item label="商品地址">
             <div>{{form.goodsUrl}}</div>
           </el-form-item>
+          <el-form-item label="商品活动">
+            <el-radio-group v-model="form.goodsActivity">
+              <el-radio label="普通">普通</el-radio>
+              <el-radio label="淘抢购">淘抢购</el-radio>
+              <el-radio label="聚划算">聚划算</el-radio>
+            </el-radio-group>
+          </el-form-item>
           <el-form-item label="商品分类">
             <el-select v-model="form.classify" placeholder="分类" >
               <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
@@ -48,6 +55,36 @@
           <el-form-item label="推广文案">
             <el-input type="textarea" v-model="form.goodsDesc"></el-input>
           </el-form-item>
+          <el-form-item label="开始时间">
+            <el-radio-group v-model="form.startTimeType">
+              <el-radio label="1">立即开始</el-radio>
+              <el-radio label="2">预告</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item v-show="form.startTimeType==2">
+            <el-select style="width:120px;margin-right:10px;" v-model="form.startTime" @change="timeRange">
+              <el-option
+                v-for="item in timeList"
+                :label="item.label"
+                :value="item.type">
+              </el-option>
+            </el-select>
+            <el-select style="width:120px;" v-model="form.startHour">
+              <el-option
+                v-for="item in hourList"
+                :label="item.label"
+                :value="item.type">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="券到期时间">
+            <el-date-picker
+              v-model="form.endTime"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="券到期时间">
+            </el-date-picker>
+          </el-form-item>
           <p class="m-t-30">优惠券信息</p>
           <el-form-item label="优惠券类型">
             <el-radio-group v-model="form.ticketType">
@@ -57,7 +94,11 @@
           <el-form-item label="优惠券链接">
             <el-input v-model="form.ticketUrl" placeholder="填写优惠券链接"></el-input>
           </el-form-item>
-
+          <el-form-item label="历史推广销量">
+            <el-input placeholder="历史推广销量" v-model="form.historyCount">
+              <template slot="append">张</template>
+            </el-input>
+          </el-form-item>
           <el-form-item label="券总量">
             <el-input placeholder="券原始总量" v-model="form.ticketTotalNum">
               <template slot="append">张</template>
@@ -73,8 +114,13 @@
               <template slot="append">元</template>
             </el-input>
           </el-form-item>
+          <el-form-item label="佣金比例">
+            <el-input placeholder="佣金比例" v-model="form.goodsRatio">
+              <template slot="append">%</template>
+            </el-input>
+          </el-form-item>
           <el-form-item>
-            <el-checkbox name="type">
+            <el-checkbox name="type" checked>
               <span style="color:#999999;">提交即表示同意</span>
               <span style="color:#4089FF;">《信息提交规范》</span>
             </el-checkbox>
@@ -89,12 +135,13 @@
   </div>
 </template>
 <script>
+import util from '../../assets/js/util.js'
 export default {
   name:"t-add",
   data(){
     return {
       goodsUrl:"",
-      firstStep:true,
+      firstStep:false,
       buttonText:"校验链接",
       buttonType:"1",//1 校验 2 下一步
       loading:false,
@@ -112,37 +159,89 @@ export default {
         ticketTotalNum:"",
         ticketPrice:"",
         goodsPrice:"",
-        type:[]
+        type:[],
+        //新增
+        goodsActivity:"1",
+        startTimeType:"1",
+        startTime:"",
+        start:"",
+        end:"",
+        startHour:"",
+        endTime:"",
+        goodsRatio:"",
+        historyCount:""
       },
+      beforeHour:"00:00",
+      timeList:[],
       typeList:[],
+      hourList:[],
       imageUrl:"",
       currentPage: 1,
-      totalNum:1000
+      totalNum:1000,
+      pickerBeginDateBefore:{
+        disabledDate(time) {
+          let yestoday = new Date();
+          yestoday.setDate(yestoday.getDate()-1);
+          return time.getTime() < yestoday.getTime();
+        }
+      },
     }
   },
   mounted:function(){
     let _this = this;
+    let hour = new Date().getHours()+1;
     _this.$api.category().then(res => {
       _this.typeList = res.data;
     });
+    for(let i=hour>23?1:0;i<4;i++){
+      _this.timeList.push({
+        label:i==0?"今天":util.getDay(i,"/"),
+        type:util.getDay(i,"-")
+      })
+    }
+    _this.form.startTime = _this.timeList[0].type;
+    _this.timeRange()
   },
   methods:{
+    timeRange(){
+      let _this = this;
+      let first = _this.timeList[0].type;
+      let hour = new Date().getHours()+1;
+      
+      if(first==_this.form.startTime){
+        _this.hourList = [];
+        for(let i=hour;i<24;i++){
+          _this.hourList.push({
+            label:i<10?"0"+i+":00":i + ":00",
+            type:i<10?"0"+i+":00":i + ":00"
+          })
+        }
+      }else{
+        _this.hourList = [];
+        for(let i=0;i<24;i++){
+          _this.hourList.push({
+            label:i<10?"0"+i+":00":i + ":00",
+            type:i<10?"0"+i+":00":i + ":00"
+          })
+        }
+      }
+      _this.form.startHour = _this.hourList[0].type
+    },
     handleAvatarSuccess(res, file) {
       let _this = this;
       _this.form.goodsImgYx = res.data;
       this.imageUrl = URL.createObjectURL(file.raw);
     },
     beforeAvatarUpload(file) {
-      const isJPG = file.type === 'image/jpeg';
+      const isJPGorPng = file.type === 'image/jpeg'||file.type === 'image/png';
       const isLt2M = file.size / 1024 / 1024 < 2;
-
-      if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG 格式!');
+      if (!isJPGorPng) {
+        this.$message.error('上传头像图片只支持JPG格式或PNG格式!');
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!');
       }
-      return isJPG && isLt2M;
+      return isJPGorPng && isLt2M;
     },
     checkUrl:function(){
       let _this = this;
@@ -178,6 +277,60 @@ export default {
     },
     onSubmit:function(){
       let _this = this;
+      if(_this.form.startTimeType==1){
+        _this.form.start = util.formatTime(new Date());
+      }else{
+        _this.form.start = _this.form.startTime + " " + _this.form.startHour
+      }
+      console.log(_this.form.endTime)
+      if(!_this.form.goodsTitle){
+        this.$message.error('请填写商品标题！');
+        return false;
+      }
+      if(!_this.form.goodsImg){
+        this.$message.error('请填写商品主图！');
+        return false;
+      }
+      if(!_this.form.goodsImgYx){
+        this.$message.error('请填写商品营销图！');
+        return false;
+      }
+      if(!_this.form.goodsDesc){
+        this.$message.error('推广文案！');
+        return false;
+      }
+      if(!_this.form.goodsImgYx){
+        this.$message.error('请填写商品营销图！');
+        return false;
+      }
+      if(!_this.form.endTime){
+        this.$message.error('请填写券到期时间！');
+        return false;
+      }
+      if(!_this.form.ticketUrl){
+        this.$message.error('请填写优惠券链接！');
+        return false;
+      }
+      if(!_this.form.historyCount){
+        this.$message.error('请填写历史推广销量！');
+        return false;
+      }
+      if(!_this.form.ticketTotalNum){
+        this.$message.error('请填写券总量！');
+        return false;
+      }
+      if(!_this.form.ticketPrice){
+        this.$message.error('请填写券单价！');
+        return false;
+      }
+      if(!_this.form.goodsPrice){
+        this.$message.error('请填写券后价！');
+        return false;
+      }
+      if(!_this.form.goodsRatio){
+        this.$message.error('请填写佣金比例！');
+        return false;
+      }
       _this.$api.addGoods({
         url:_this.form.goodsUrl,
         goods_type:_this.form.classify,

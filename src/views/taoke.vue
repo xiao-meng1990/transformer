@@ -13,7 +13,7 @@
     <t-main>
       <div class="tab-box">
         <t-left-tab class="m-r-20" :def="def" :list="option"></t-left-tab>
-        <router-view/>
+        <router-view v-if="!$route.meta.keepAlive" />
         <!-- <t-to-audit></t-to-audit> -->
       </div>
     </t-main>

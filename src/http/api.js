@@ -65,6 +65,14 @@ const allcsv = params => {
 const getCode = params => {
   return fetch.post("user/send-yzm", params);
 };
+//根据id获取券详情
+const ticketInfo = params => {
+  return fetch.post("goods/one", params);
+};
+//根据id修改券信息
+const ticketAmend = params => {
+  return fetch.post("goods/change-detail", params);
+};
 export default {
   login,
   register,
@@ -81,5 +89,7 @@ export default {
   setUserInfo,
   getCode,
   allcsv,
-  xuanpinku
+  xuanpinku,
+  ticketInfo,
+  ticketAmend
 };

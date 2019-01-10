@@ -2,7 +2,7 @@
   <div class="t-tab">
     <div 
     v-for="item in list" 
-    :class="{sel:item.name==selName}"
+    :class="{sel:item.url==selUrl}"
     @click="selected(item)"
     >{{item.name}}</div>
   </div>
@@ -12,7 +12,7 @@ export default {
   name:"t-left-tab",
   data(){
     return {
-      selName:""
+      selUrl:""
     }
   },
   props:{
@@ -24,17 +24,21 @@ export default {
       default:0
     }
   },
-  mounted:function(){
-    let _this = this;
-    console.log(this.$route.path);
-    this.selName = this.list[this.def].name;
-    // this.$router.push({ path: _this.list[_this.def].url })
+  created:function(){
+    this.historyWatch()
   },
   methods:{
     selected:function(obj){
-      this.selName = obj.name;
       this.$router.push({ path: obj.url })
+    },
+    historyWatch () {
+     let _this = this;
+     console.log(this.$route.path);
+     this.selUrl = this.$route.path;
     }
+  },
+  watch: {
+    '$route': 'historyWatch'
   }
 }
 </script>

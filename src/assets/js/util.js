@@ -43,6 +43,46 @@ function getDay(num, str) {
   if (oDay.length <= 1) oDay = "0" + oDay;
   return oYear + str + oMoth + str + oDay;
 }
+const formatTime = date => {
+  const year = date.getFullYear();
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+  const second = date.getSeconds();
+
+  return (
+    [year, month, day].map(formatNumber).join("/") +
+    " " +
+    [hour, minute, second].map(formatNumber).join(":")
+  );
+};
+const formatTime2 = time => {
+  const date = new Date(parseFloat(time));
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+
+  return (
+    [month, day].map(formatNumber).join("/") +
+    "<br>" +
+    [hour, minute].map(formatNumber).join(":")
+  );
+};
+const formatTime3 = time => {
+  const date = new Date(parseFloat(time));
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const hour = date.getHours();
+  const minute = date.getMinutes();
+
+  return (
+    [month, day].map(formatNumber).join("/") +
+    " " +
+    [hour, minute].map(formatNumber).join(":")
+  );
+};
 const formatShortDate = time => {
   const date = new Date(parseFloat(time));
   const year = date.getFullYear();
@@ -65,7 +105,12 @@ function formatPrice(x) {
 }
 function forInTime(arr, index) {
   for (let i = 0, j = arr.length; i < j; i++) {
-    arr[i][index] = formatShortDate(arr[i][index]);
+    arr[i][index] = formatTime2(arr[i][index]);
+  }
+}
+function forInTime3(arr, index) {
+  for (let i = 0, j = arr.length; i < j; i++) {
+    arr[i][index] = formatTime3(arr[i][index]);
   }
 }
 function forInSelName(arr, index) {
@@ -79,6 +124,12 @@ function forInPrice(arr, index) {
     arr[i][index] = "￥" + formatPrice(arr[i][index]);
   }
 }
+function forInYongjin(arr, index) {
+  for (let i = 0, j = arr.length; i < j; i++) {
+    arr[i][index] = formatPrice(arr[i][index]) + "%";
+  }
+}
+
 function forInStatus(arr, index) {
   for (let i = 0, j = arr.length; i < j; i++) {
     switch (arr[i][index]) {
@@ -267,5 +318,9 @@ export default {
   pass,
   turnDown,
   isValidMobile,
-  settime
+  settime,
+  formatTime,
+  formatTime2,
+  forInYongjin,
+  forInTime3
 };
