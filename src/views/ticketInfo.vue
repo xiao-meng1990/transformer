@@ -17,7 +17,7 @@
           <p>商品信息</p>
           <el-form size="small" ref="form" label-width="100px">
             <el-form-item label="商品地址">
-              <div>{{info.shop_name}}</div>
+              <div>{{info.url}}</div>
             </el-form-item>
             <el-form-item label="商品活动">
               <div>{{info.ac_type}}</div>
@@ -38,10 +38,10 @@
               <div>{{info.content}}</div>
             </el-form-item>
             <el-form-item label="开始时间">
-              <div>{{info.yhq_stime}}</div>
+              <div>{{sTime}}</div>
             </el-form-item>
             <el-form-item label="券到期时间">
-              <div>{{info.yhq_etime}}</div>
+              <div>{{eTime}}</div>
             </el-form-item>
             <p class="m-t-30">优惠券信息</p>
             <el-form-item label="优惠券类型">
@@ -86,6 +86,8 @@ export default {
       nickName:"",
       typeName:"",
       info:{},
+      sTime:"",
+      eTime:"",
       typeList:[]
     }
   },
@@ -98,13 +100,13 @@ export default {
     let _this = this;
     let userInfo = util.getStorJson("userInfo");
     _this.nickName = userInfo.nickname;
-    //TODO
-    // this.$route.params.id
     
     _this.$api.ticketInfo({
-      id:"1022"
+      id:_this.$route.params.id
     }).then(res => {
       _this.info = res.data;
+      _this.sTime = util.formatTime(new Date(res.data.yhq_stime))
+      _this.eTime = util.formatTime(new Date(res.data.yhq_etime))
       console.log(_this.info)
       _this.$api.category().then(result => {
         _this.typeList = result.data;

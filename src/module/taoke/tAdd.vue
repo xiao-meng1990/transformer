@@ -82,6 +82,7 @@
               v-model="form.endTime"
               type="datetime"
               value-format="yyyy-MM-dd HH:mm:ss"
+              default-time="23:59:59"
               placeholder="券到期时间">
             </el-date-picker>
           </el-form-item>
@@ -141,7 +142,7 @@ export default {
   data(){
     return {
       goodsUrl:"",
-      firstStep:false,
+      firstStep:true,
       buttonText:"校验链接",
       buttonType:"1",//1 校验 2 下一步
       loading:false,
@@ -159,9 +160,9 @@ export default {
         ticketTotalNum:"",
         ticketPrice:"",
         goodsPrice:"",
-        type:[],
+        // type:[],
         //新增
-        goodsActivity:"1",
+        goodsActivity:"普通",
         startTimeType:"1",
         startTime:"",
         start:"",
@@ -344,7 +345,14 @@ export default {
         yhq_price:_this.form.ticketPrice,
         taobao_id:_this.taobao_id,
         shop_name:_this.shopName,
-        content:_this.form.goodsDesc
+        content:_this.form.goodsDesc,
+        history_num:_this.form.historyCount,
+        yong_jin:_this.form.goodsRatio,
+        ac_type:_this.form.goodsActivity,
+        ac_time:_this.form.start,
+        yhq_stime:_this.form.start,
+        yhq_etime:_this.form.endTime,
+        ac_time_type:_this.form.startTimeType
       }).then(res => {
         if(res.code == 0){
           _this.$message({

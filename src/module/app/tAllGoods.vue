@@ -2,40 +2,19 @@
   <div class="my-goods">
     <div class="goods-screen">
       <div>
-        <label class="m-r-10">劵后价</label>
-        <el-input size="small" class="el-input" v-model="goodsEndPriceBefore">
-          <template slot="append">元</template>
-        </el-input>
-        <label class="m-r-10 m-l-10">—</label>
-        <el-input size="small" class="el-input" v-model="goodsEndPriceAfter">
-          <template slot="append">元</template>
-        </el-input>
-        <label class="m-r-5 m-l-30">券面额 ></label>
-        <el-input size="small" class="el-input" v-model="ticketPrice">
-          <template slot="append">元</template>
-        </el-input>
-        <label class="m-r-10 m-l-30">类别</label>
-        <el-select class="goods-type" v-model="classify" size="small" >
-          <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
+        <label class="m-r-10">活动类型</label>
+        <el-select class="goods-type" v-model="activeType" size="small" >
+          <el-option v-for="item in activeTypeList" :value="item.name"></el-option>
         </el-select>
-      </div>
-      <div class="m-t-20">
-        <el-button 
-          v-for="item in dateButtonList" 
-          size="small" :type="item.id==dateId?'primary':''" 
-          @click="selectDate(item.id)" 
-          plain
-        >{{item.name}}</el-button>
+        <label class="m-r-10 m-l-20">活动开始区间</label>
         <el-date-picker
-          class="m-l-20"
           size="small"
-          value-format="yyyy-MM-dd"
+          value-format="yyyy-MM-dd HH:mm:ss"
           v-model="dates"
-          type="daterange"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-          @change="dateRange"
-          :default-time="['00:00:00', '23:59:59']">
+          type="datetimerange"
+          start-placeholder="区间开始时间"
+          end-placeholder="区间结束时间"
+          :default-time="['10:00:00', '10:00:00']">
         </el-date-picker>
         <el-button 
           class="float-r" 
@@ -50,15 +29,18 @@
     <div class="list m-t-30">
       <t-app-goods
         v-for="item in tableData"
-        :ticketPrice="item.yhq_price"
+        :ticketPrice="parseFloat(item.yhq_price)"
         :cardUrl="item.pic_yx"
         :goodName="item.title"
         :storeName="item.shop_name"
         :nickName="item.nickname"
-        :goodsCheapPrice="item.price"
+        :goodsCheapPrice="parseFloat(item.price)"
         :id="item.id"
         :taobaoUrl="item.url"
         :statusId="item.status"
+        :taobaoId="item.taobao_id"
+        :yongjin="parseFloat(item.yong_jin)"
+        :historyCount="item.history_num"
         @add="addSelArr"
         @minus="minusSelArr"
       ></t-app-goods>
@@ -81,20 +63,16 @@ export default {
   name:"t-all-goods",
   data(){
     return {
-      goodsEndPriceBefore:"",
-      goodsEndPriceAfter:"",
-      ticketPrice:"",
-      dates:"",
-      classify:0,
-      dateButtonList:[{
-        name:"昨天",
-        id:2
+      activeType:"普通",
+      activeTypeList:[{
+        name:"普通"
       },{
-        name:"今天",
-        id:1
+        name:"淘抢购"
+      },{
+        name:"聚划算"
       }],
+      dates:"",
       typeList:[],
-      dateId:0,
       startDate:"",
       endDate:"",
       currentPage: 1,
@@ -111,7 +89,6 @@ export default {
     _this.$api.category().then(res => {
       _this.typeList = res.data;
     });
-    _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
     _this.table();
   },
   components: {
@@ -124,30 +101,17 @@ export default {
       _this.currentPage = val;
       this.table();
     },
-    selectDate:function(index){
-      let _this = this;
-      _this.dateId = index;
-      _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.endDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.table();
-    },
-    dateRange:function(d){
-      let _this = this;
-      _this.dateId = 0;
-      _this.startDate = d[0];
-      _this.endDate = d[1];
-    },
     query:function(){
       this.table();
     },
     table:function(){
       let _this = this;
+      _this.dates = _this.dates?_this.dates:[];
+      _this.startDate = _this.dates[0]?_this.dates[0]:"";
+      _this.endDate = _this.dates[1]?_this.dates[1]:"";
       //淘客商品列表
       _this.$api.listApp({
-        price:_this.ticketPrice,  //券面额
-        s_price:_this.goodsEndPriceBefore,  //筛选券后价  小
-        e_price:_this.goodsEndPriceAfter,  //筛选券后价  大
-        type:_this.classify,  //商品类型 鞋子等
+        ac_type:_this.activeType,
         status:_this.selectId,   //0 未审核 1 待选中 2 已选中  3 下架 4 未通过审核 5  已审核
         s_date:_this.startDate,
         e_date:_this.endDate,

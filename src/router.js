@@ -30,8 +30,8 @@ export default new Router({
       component: Home
     },
     {
-      path: "/ticketinfo",
-      // path: "/ticketinfo/:id",
+      // path: "/ticketinfo",
+      path: "/ticketinfo/:id",
       name: "ticketinfo",
       component: ticketInfo
     },

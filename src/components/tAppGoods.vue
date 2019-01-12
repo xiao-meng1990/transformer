@@ -4,9 +4,22 @@
     <div class="goods-select">
       <img :src="selImg">
     </div>
-    <div @click="selectGoods" class="goods-img">
-      <img :src="cardUrl" alt="商品图片">
-    </div>
+    <el-popover
+      placement="right-start"
+      width="200"
+      trigger="hover">
+      <div>
+        <div style="font-size:16px;margin-bottom:10px;">详细信息</div>
+        <div>淘宝Id：{{taobaoId}}</div>
+        <div>佣金比例：{{yongjin}}%</div>
+        <div>推广销量：{{historyCount}}</div>
+      </div>
+      <div @click="selectGoods" slot="reference" class="goods-img">
+        <img :src="cardUrl" alt="商品图片">
+      </div>
+      <!-- <el-button slot="reference">hover 激活</el-button> -->
+    </el-popover>
+    
     <div class="goods-info">
       <div class="goods-center">
         <div class="goods-name">{{goodName}}</div>
@@ -35,8 +48,20 @@ export default {
     }
   },
   props:{
-    ticketPrice:{
+    taobaoId:{
       type:String,
+      default:"0"
+    },
+    yongjin:{
+      type:[String,Number],
+      default:"0"
+    },
+    historyCount:{
+      type:[String,Number],
+      default:"0"
+    },
+    ticketPrice:{
+      type:[String,Number],
       default:"0"
     },
     cardUrl:{
@@ -56,11 +81,11 @@ export default {
       default:"昵称"
     },
     goodsCheapPrice:{
-      type:String,
+      type:[String,Number],
       default:"0"
     },
     id:{
-      type:String,
+      type:[String,Number],
       default:0
     },
     taobaoUrl:{
@@ -68,7 +93,7 @@ export default {
       default:""
     },
     statusId:{
-      type:Number,
+      type:[String,Number],
       default:0
     }
   },

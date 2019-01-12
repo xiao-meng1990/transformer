@@ -28,7 +28,7 @@
               </el-form-item>
               <el-form-item label="商品分类">
                 <el-select v-model="form.classify" placeholder="分类" >
-                  <el-option v-for="item in typeList" :label="item.name" :value="item.id"></el-option>
+                  <el-option v-for="item in typeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
                 </el-select>
               </el-form-item>
               <el-form-item label="商品标题">
@@ -52,20 +52,20 @@
                 <el-input type="textarea" v-model="form.goodsDesc"></el-input>
               </el-form-item>
               <el-form-item label="开始时间">
-                <el-radio-group v-model="form.startTimeType">
+                <el-radio-group v-model="form.startTimeType" disabled>
                   <el-radio label="1">立即开始</el-radio>
                   <el-radio label="2">预告</el-radio>
                 </el-radio-group>
               </el-form-item>
               <el-form-item v-show="form.startTimeType==2">
-                <el-select style="width:120px;margin-right:10px;" v-model="form.startTime" @change="timeRange">
+                <el-select style="width:120px;margin-right:10px;" v-model="form.startTime" @change="timeRange" disabled>
                   <el-option
                     v-for="item in timeList"
                     :label="item.label"
                     :value="item.type">
                   </el-option>
                 </el-select>
-                <el-select style="width:120px;" v-model="form.startHour">
+                <el-select style="width:120px;" v-model="form.startHour" disabled>
                   <el-option
                     v-for="item in hourList"
                     :label="item.label"
@@ -75,6 +75,7 @@
               </el-form-item>
               <el-form-item label="券到期时间">
                 <el-date-picker
+                  disabled
                   v-model="form.endTime"
                   type="datetime"
                   value-format="yyyy-MM-dd HH:mm:ss"
@@ -198,8 +199,29 @@ export default {
     _this.$api.ticketInfo({
       id:_this.$route.params.id
     }).then(res => {
-      //todo
-      // _this.info = res.data;
+      let info = {};
+      let hour = new Date(res.data.ac_time).getHours();
+      info.goodsUrl = res.data.url
+      info.classify = parseFloat(res.data.goods_type)
+      info.ticketType = "1"
+      info.goodsTitle = res.data.title
+      info.goodsImg = res.data.pic
+      info.goodsImgYx = res.data.pic_yx
+      info.goodsDesc = res.data.content
+      info.ticketUrl = res.data.yhq_url
+      info.ticketTotalNum = res.data.yhq_num
+      info.ticketPrice = res.data.yhq_price
+      info.goodsPrice = res.data.price
+      info.goodsActivity = res.data.ac_type
+      info.startTimeType = res.data.ac_time_type  
+      info.startTime = util.formatShortDate(res.data.yhq_stime)
+      info.startHour = hour<10?"0"+hour+":00":hour + ":00"
+      info.endTime = util.formatTime(new Date(res.data.yhq_etime))
+      info.goodsRatio = res.data.yong_jin
+      info.historyCount = res.data.history_num
+      _this.imageUrl = res.data.pic_yx
+      _this.form = info;
+      
     });
   },
   methods:{
@@ -304,6 +326,7 @@ export default {
         return false;
       }
       _this.$api.ticketAmend({
+        id:_this.$route.params.id,
         url:_this.form.goodsUrl,
         goods_type:_this.form.classify,
         title:_this.form.goodsTitle,
@@ -316,11 +339,13 @@ export default {
         yhq_price:_this.form.ticketPrice,
         taobao_id:_this.taobao_id,
         shop_name:_this.shopName,
-        content:_this.form.goodsDesc
+        content:_this.form.goodsDesc,
+        history_num:_this.form.historyCount,
+        yong_jin:_this.form.goodsRatio
       }).then(res => {
         if(res.code == 0){
           _this.$message({
-            message: '提交成功',
+            message: '修改成功',
             type: 'success'
           });
           setTimeout(function(){

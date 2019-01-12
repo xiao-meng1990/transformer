@@ -19,35 +19,33 @@
         </el-carousel-item>
       </el-carousel>
       <div>
-        <div class="lebel m-l-20">分类:</div>
-        <ul class="p-l-20 p-r-20 m-t-20">
+        <ul class="p-l-20 p-r-20 m-t-10">
           <li class="classify m-r-10" v-for="list in classify">
             <el-button 
             :type="list.id==selectId?'primary':''" 
-            @click="select(list.id)"  
+            @click="select(list.id)"
+            style="margin-top:10px"
             size="mini" plain>{{list.name}}</el-button>
           </li>
         </ul>
       </div>
       <div>
-        <div class="lebel m-l-20">筛查:</div>
+        <div class="lebel m-l-20">筛选:</div>
         <ul class="p-l-20 p-r-20 m-t-20">
-          <el-button 
-            v-for="item in dateButtonList" 
-            size="small" :type="item.id==dateId?'primary':''" 
-            @click="selectDate(item.id)" 
-            plain
-          >{{item.name}}</el-button>
+          <label class="m-r-10">活动类型</label>
+          <el-select @change="dateRange" class="goods-type" v-model="activeType" size="small" >
+            <el-option v-for="item in activeTypeList" :value="item.name"></el-option>
+          </el-select>
+          <label class="m-r-10 m-l-20">活动开始区间</label>
           <el-date-picker
-            class="m-l-20"
             size="small"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd HH:mm:ss"
             v-model="dates"
-            type="daterange"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
+            type="datetimerange"
             @change="dateRange"
-            :default-time="['00:00:00', '23:59:59']">
+            start-placeholder="区间开始时间"
+            end-placeholder="区间结束时间"
+            :default-time="['10:00:00', '10:00:00']">
           </el-date-picker>
         </ul>
       </div>
@@ -96,6 +94,15 @@ export default {
   data(){
     return {
       isLogin:false,
+      activeType:"普通",
+      activeTypeList:[{
+        name:"普通"
+      },{
+        name:"淘抢购"
+      },{
+        name:"聚划算"
+      }],
+      dates:"",
       classify:[],
       tableData:[],
       dates: '',
@@ -106,14 +113,6 @@ export default {
       currentPage: 1,
       totalNum:0,
       nickName:"",
-      dateId:0,
-      dateButtonList:[{
-        name:"昨天",
-        id:2
-      },{
-        name:"今天",
-        id:1
-      }],
 
     }
   },
@@ -131,7 +130,6 @@ export default {
     _this.$api.category().then(res => {
       _this.classify = res.data;
     })
-    _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
     _this.table();
     
   },
@@ -145,23 +143,17 @@ export default {
       _this.currentPage = val;
       this.table();
     },
-    selectDate:function(index){
-      let _this = this;
-      _this.dateId = index;
-      _this.startDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.endDate = _this.dateId == 1?util.getDay(0,"-"):_this.dateId == 2?util.getDay(-1,"-"):"";
-      _this.table();
-    },
-    dateRange:function(d){
-      let _this = this;
-      _this.dateId = 0;
-      _this.startDate = d[0];
-      _this.endDate = d[1];
+    dateRange:function(){
       this.table();
     },
     table:function(){
       let _this =this;
+      _this.dates = _this.dates?_this.dates:[];
+      _this.startDate = _this.dates[0]?_this.dates[0]:"";
+      _this.endDate = _this.dates[1]?_this.dates[1]:"";
+
       _this.$api.xuanpinku({
+        ac_type:_this.activeType,
         type:_this.selectId,
         status:"",
         s_date:_this.startDate,

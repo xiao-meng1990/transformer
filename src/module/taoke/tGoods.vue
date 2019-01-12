@@ -127,18 +127,18 @@ export default {
       dates:"",
       selButtonList:[{
         name:"已选中",
-        id:2,
-      },{
-        name:"未选中",
         id:1,
       },{
+        name:"未选中",
+        id:2,
+      },{
         name:"未开始",
-        id:3,//待定
+        id:3,
       },{
         name:"无效商品",
-        id:4,//待定
+        id:4,
       }],
-      selectId:2,
+      selectId:1,
       startDate:"",
       endDate:"",
       currentPage: 1,
@@ -184,7 +184,7 @@ export default {
       let _this = this;
       //淘客商品列表
       _this.$api.taokeList({
-        status:_this.selectId, //1未选中 2已选中 3下架 
+        status:_this.selectId, // 1已选中 2未选中 3未开始 4无效商品
         s_date:_this.startDate,
         e_date:_this.endDate,
         page:_this.currentPage,
@@ -244,7 +244,7 @@ export default {
   cursor: pointer;
 }
 .row-height{
-  max-height: 132px;
+  max-height: 113px;
   overflow: hidden;
 }
 </style>

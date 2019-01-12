@@ -151,6 +151,9 @@ function forInStatus(arr, index) {
       case "5":
         arr[i].statusName = "已审核";
         break;
+      case "6":
+        arr[i].statusName = "已过期";
+        break;
       default:
         break;
     }
