@@ -52,12 +52,12 @@
       <div class="list m-t-30">
         <t-goods
         v-for="item in tableData"
-        :ticketPrice="item.yhq_price"
+        :ticketPrice="parseFloat(item.yhq_price)"
         :cardUrl="item.pic_yx"
         :goodName="item.title"
         :storeName="item.shop_name"
         :nickName="item.nickname"
-        :goodsCheapPrice="item.price"
+        :goodsCheapPrice="parseFloat(item.price)"
         :id="item.id"
         :taobaoUrl="item.url"
       ></t-goods>

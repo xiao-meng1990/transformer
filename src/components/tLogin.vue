@@ -6,7 +6,7 @@
         <el-input class="m-b-15" v-model="lPassword" type="password" placeholder="请输入密码"></el-input>
         <el-button class="width100" type="primary" @click="login">登录</el-button>
         <div>
-          <el-button class="left" type="text">忘记密码</el-button>
+          <el-button class="left" type="text" @click="forgetPass">忘记密码</el-button>
           <el-button @click="goRegister" class="right m-l-0" type="text">注册</el-button>
           <el-button class="right" type="text" disabled>还没有帐号？</el-button>
         </div>
@@ -44,6 +44,12 @@ export default {
     }
   },
   methods:{
+    forgetPass:function(){
+      this.$message({
+        message: '请联系客服',
+        type: 'success'
+      })
+    },
     handleClick:function(tab, event){
       this.sel=tab.name;
     },
@@ -56,7 +62,6 @@ export default {
     login:function(){
       //登录
       let _this = this;
-      console.log(_this.lPhone+"....."+_this.lPassword);
       _this.$api.login({
         username:_this.lPhone,
         password:_this.lPassword

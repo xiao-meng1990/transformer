@@ -332,6 +332,10 @@ export default {
         this.$message.error('请填写佣金比例！');
         return false;
       }
+      if(new Dare(_this.form.endTime)<new Dare(_this.form.start)){
+        this.$message.error('结束时间不能早于开始时间！');
+        return false;
+      }
       _this.$api.addGoods({
         url:_this.form.goodsUrl,
         goods_type:_this.form.classify,

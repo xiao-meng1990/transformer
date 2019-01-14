@@ -31,7 +31,7 @@ export default {
   },
   props:{
     ticketPrice:{
-      type:String,
+      type:[String,Number],
       default:"0"
     },
     cardUrl:{
@@ -51,7 +51,7 @@ export default {
       default:"昵称"
     },
     goodsCheapPrice:{
-      type:String,
+      type:[String,Number],
       default:"0"
     },
     taobaoUrl:{
