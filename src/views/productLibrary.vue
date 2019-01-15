@@ -140,7 +140,7 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(val);
-      _this.currentPage = val;
+      this.currentPage = val.val;
       this.table();
     },
     dateRange:function(){

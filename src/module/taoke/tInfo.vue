@@ -13,14 +13,14 @@
         <p class="font-size-50 green">{{sel}}</p>
         <div>
           <span>已选中</span>
-          <el-button @click="lookAt(2)" type="text">[查看]</el-button>
+          <el-button @click="lookAt(1)" type="text">[查看]</el-button>
         </div>
       </div>
       <div class="home-noselected">
         <p class="font-size-50 pink">{{unSel}}</p>
         <div>
           <span>未选中</span>
-          <el-button @click="lookAt(1)" type="text">[查看]</el-button>
+          <el-button @click="lookAt(2)" type="text">[查看]</el-button>
         </div>
       </div>
     </div>

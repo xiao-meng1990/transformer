@@ -90,7 +90,7 @@ export default {
   methods:{
     handleCurrentChange (val) {
       console.log(val);
-      _this.currentPage = val;
+      this.currentPage = val.val;
       this.table();
     },
     query:function(){

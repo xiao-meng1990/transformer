@@ -9,6 +9,7 @@
       >{{item.name}}</el-button>
       <el-button @click="release" size="small" type="primary" style="float:right">发布商品</el-button>
       <div class="m-t-20">
+        <label class="m-r-10">提交时间区间</label>
         <el-date-picker
           size="small"
           value-format="yyyy-MM-dd"
@@ -101,7 +102,7 @@
           <template slot-scope="scope">
             <div class="btn" @click="detail(scope.row.url)">查看</div>
             <div class="btn" @click="amend(scope.row.id)">修改</div>
-            <div class="btn" @click="soldOut(scope.row.id)">下架</div>
+            <div v-show="selectId!=4" class="btn" @click="soldOut(scope.row.id)">下架</div>
           </template>
         </el-table-column>
       </el-table>
@@ -166,22 +167,22 @@ export default {
   },
   methods:{
     handleCurrentChange (val) {
-      this.currentPage = val;
+      this.currentPage = val.val;
       this.table();
     },
     select:function(index){
       this.selectId = index;
       this.table();
     },
-    dateRange:function(d){
+    dateRange:function(){
       let _this = this;
-      _this.dateId = 0;
-      _this.startDate = d[0];
-      _this.endDate = d[1];
       _this.table();
     },
     table:function(){
       let _this = this;
+      _this.dates = _this.dates?_this.dates:[];
+      _this.startDate = _this.dates[0]?_this.dates[0]:"";
+      _this.endDate = _this.dates[1]?_this.dates[1]:"";
       //淘客商品列表
       _this.$api.taokeList({
         status:_this.selectId, // 1已选中 2未选中 3未开始 4无效商品
@@ -246,6 +247,9 @@ export default {
 .row-height{
   max-height: 113px;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 </style>
 

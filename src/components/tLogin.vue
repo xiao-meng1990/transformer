@@ -2,9 +2,11 @@
   <div class="login">
     <el-tabs :value="sel" type="border-card" @tab-click="handleClick" stretch>
       <el-tab-pane name="login" label="登录">
-        <el-input class="m-b-15 m-t-15" v-model="lPhone" type="text" placeholder="请输入手机号"></el-input>
-        <el-input class="m-b-15" v-model="lPassword" type="password" placeholder="请输入密码"></el-input>
-        <el-button class="width100" type="primary" @click="login">登录</el-button>
+        <div @keyup.enter="login"> 
+          <el-input class="m-b-15 m-t-15" v-model="lPhone" type="text" placeholder="请输入手机号"></el-input>
+          <el-input class="m-b-15" v-model="lPassword" type="password" placeholder="请输入密码"></el-input>
+          <el-button v-focus class="width100" type="primary" @click.stop="login">登录</el-button>
+        </div>
         <div>
           <el-button class="left" type="text" @click="forgetPass">忘记密码</el-button>
           <el-button @click="goRegister" class="right m-l-0" type="text">注册</el-button>
@@ -41,6 +43,14 @@ export default {
       sel:"login",
       codeText:"获取验证码",
       codeType:true
+    }
+  },
+  directives: {
+    focus: {
+      // 指令的定义
+      inserted: function(el) {
+        el.focus();
+      }
     }
   },
   methods:{

@@ -77,7 +77,7 @@
         </el-table-column>
         <el-table-column
           label="起止时间"
-          width="100">
+          width="90">
           <template slot-scope="scope">
             <div v-html="scope.row.yhq_stime"></div>
             <div>至</div>
@@ -170,7 +170,8 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(val);
-      _this.currentPage = val;
+      let _this = this;
+      _this.currentPage = val.val;
       this.table();
     },
     query:function(){
@@ -259,6 +260,9 @@ export default {
 .row-height{
   max-height: 113px;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 </style>
 

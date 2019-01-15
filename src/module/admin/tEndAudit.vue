@@ -37,7 +37,7 @@
     <div class="m-t-30 audit-data">
       <el-table
         :data="tableData"
-        style="width: 100%"
+        style="width: 100%;font-size:13px;"
         :highlight-current-Row="true">
         <el-table-column
           label="提交时间"
@@ -85,7 +85,7 @@
         </el-table-column>
         <el-table-column
           label="起止时间"
-          width="100">
+          width="90">
           <template slot-scope="scope">
             <div v-html="scope.row.yhq_stime"></div>
             <div>至</div>
@@ -107,8 +107,8 @@
           width="70">
           <template slot-scope="scope">
             <div class="btn" @click="ticketInfo(scope.row.id)">查看</div>
-            <div v-show="selectId2!=9" class="btn" @click="tsoldOut(scope.row.id)">下架</div>
-            <div v-show="selectId2!=9" class="btn" @click="pass(scope.row.id)">撤销</div>
+            <div v-show="selectId2!=9" class="btn" @click="soldOut(scope.row.id)">下架</div>
+            <!-- <div v-show="selectId2!=9" class="btn" @click="pass(scope.row.id)">撤销</div> -->
           </template>
         </el-table-column>
       </el-table>
@@ -171,7 +171,8 @@ export default {
   methods:{
     handleCurrentChange (val) {
       console.log(val);
-      _this.currentPage = val;
+      let _this = this;
+      _this.currentPage = val.val;
       this.table();
     },
     select:function(index){
@@ -267,6 +268,9 @@ export default {
 .row-height{
   max-height: 113px;
   overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
 }
 </style>
 
