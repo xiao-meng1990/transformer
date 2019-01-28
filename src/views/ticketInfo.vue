@@ -56,7 +56,7 @@
             <el-form-item label="券总量">
               <div>{{info.yhq_num}}</div>
             </el-form-item>
-            <el-form-item label="券单价">
+            <el-form-item label="券面额">
               <div>{{info.yhq_price}}元</div>
             </el-form-item>
             <el-form-item label="券后价">

@@ -105,7 +105,7 @@
               <template slot="append">张</template>
             </el-input>
           </el-form-item>
-          <el-form-item label="券单价">
+          <el-form-item label="券面额">
             <el-input placeholder="价格" v-model="form.ticketPrice">
               <template slot="append">元</template>
             </el-input>
