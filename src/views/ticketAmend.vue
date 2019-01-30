@@ -349,8 +349,9 @@ export default {
             type: 'success'
           });
           setTimeout(function(){
-            // _this.$router.push({path:"/taoke/add"})
-          },2000)
+            // _this.$router.push({path:"/taoke/goods"})
+            _this.$router.go(-1)
+          },1200)
         }else{
           _this.$message.error(res.msg);
         }

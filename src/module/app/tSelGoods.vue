@@ -19,22 +19,86 @@
         <el-button @click="submit" class="float-r" size="small" type="primary">导出</el-button>
       </div>
     </div>
-    <div class="list m-t-30">
-      <t-app-goods
-        v-for="item in tableData"
-        :ticketPrice="parseFloat(item.yhq_price)"
-        :cardUrl="item.pic_yx"
-        :goodName="item.title"
-        :storeName="item.shop_name"
-        :nickName="item.nickname"
-        :goodsCheapPrice="parseFloat(item.price)"
-        :id="item.id"
-        :taobaoUrl="item.url"
-        :statusId="item.status"
-        :taobaoId="item.taobao_id"
-        :yongjin="parseFloat(item.yong_jin)"
-        :historyCount="item.history_num"
-      ></t-app-goods>
+    <div class="m-t-30">
+      <el-table
+        :data="tableData"
+        style="width: 100%;font-size:13px;"
+        ref="table"
+        @selection-change="handleSelectionChange"
+        :highlight-current-Row="true">
+        <el-table-column
+          type="selection"
+          :selectable='checkboxInit'
+          width="55">
+        </el-table-column>
+        <el-table-column
+          label="提交时间"
+          width="90">
+          <template slot-scope="scope">
+            <div v-html="scope.row.created_at"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="淘宝Id"
+          width="120">
+          <template slot-scope="scope">
+            <div class="btn" v-html="scope.row.taobao_id" @click="detail(scope.row.url)"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="pic_yx"
+          width="100"
+          label="营销图">
+          <template slot-scope="scope">
+            <img width="80" height="80" :src="scope.row.pic_yx" alt="营销图">
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="title"
+          label="短标题"
+          width="120">
+          <template slot-scope="scope">
+            <div class="row-height" v-html="scope.row.title"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="price"
+          label="券后价"
+          width="70">
+        </el-table-column>
+        <el-table-column
+          prop="yhq_price"
+          label="优惠券"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          prop="yong_jin"
+          label="佣金比例"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          label="起止时间"
+          width="90">
+          <template slot-scope="scope">
+            <div v-html="scope.row.yhq_stime"></div>
+            <div>至</div>
+            <div v-html="scope.row.yhq_etime"></div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="history_num"
+          label="推广销量"
+          width="80">
+        </el-table-column>
+        <el-table-column
+          prop="name"
+          label="操作"
+          width="70">
+          <template slot-scope="scope">
+            <div class="btn" @click="ticketInfo(scope.row.id)">查看</div>
+          </template>
+        </el-table-column>
+      </el-table>
     </div>
 
     <div class="m-t-20">
@@ -51,7 +115,7 @@ import tAppGoods from '@/components/tAppGoods.vue'
 import tPages from '@/components/tPages.vue'
 import util from '../../assets/js/util.js'
 export default {
-  name:"t-all-goods",
+  name:"t-sel-goods",
   data(){
     return {
       activeType:"普通",
@@ -64,7 +128,6 @@ export default {
       }],
       dates:"",
       typeList:[],
-      dateId:0,
       startDate:"",
       endDate:"",
       currentPage: 1,
@@ -72,6 +135,7 @@ export default {
       pageSize:"",
       tableData:[],
       selected:[],
+      multipleSelection: [],
       selectId:"2" 
     }
   },
@@ -93,6 +157,15 @@ export default {
       this.currentPage = val.val;
       this.table();
     },
+    checkboxInit(row,index){
+      if (row.status==2) 
+        return 0;//不可勾选
+      else
+        return 1;//可勾选
+    },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+    },
     query:function(){
       this.table();
     },
@@ -112,7 +185,21 @@ export default {
       }).then(res => {
         if(res.code == 0){
           _this.tableData = res.data.list;
+          util.forInTime(_this.tableData,"created_at");
+          util.forInSelName(_this.tableData,"get_user_id");
+          util.forInPrice(_this.tableData,"price")
+          util.forInPrice(_this.tableData,"yhq_price")
+          util.forInYongjin(_this.tableData,"yong_jin")
+          util.forInTime3(_this.tableData,"yhq_stime")
+          util.forInTime3(_this.tableData,"yhq_etime")
           _this.totalNum = parseFloat(res.data.total);
+          _this.$nextTick(function(){
+            for(let i=0;i<_this.tableData.length;i++){
+            if(_this.tableData[i].status==2){
+                _this.$refs.table.toggleRowSelection(_this.tableData[i],false);
+              }
+            }
+          });
         }
       });
     },
@@ -121,6 +208,14 @@ export default {
        _this.$api.allcsv().then(res => {
          window.location.href = res.data;
        });
+    },
+    detail:function(url){
+      window.open(url)
+    },
+    ticketInfo:function(id){
+      this.$router.push({
+        path: `/ticketinfo/${id}`,
+      })
     }
   }
 }
@@ -154,6 +249,11 @@ export default {
   height: 0;
   clear: both;
   visibility: hidden;
+}
+.btn{
+  color: #007bff;
+  font-size: 13px;
+  cursor: pointer;
 }
 </style>
 
