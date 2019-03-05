@@ -26,7 +26,8 @@
         <el-button @click="query" class="float-r" size="small" type="primary">查询</el-button>
       </div>
     </div>
-    <div class="m-t-30">
+    <div class="m-t-20 explain">友情提示：已选过的商品不能二次选中，要想导出可点击左边栏【已选中商品】直接导出</div>
+    <div class="m-t-20">
       <el-table
         :data="tableData"
         style="width: 100%;font-size:13px;"
@@ -277,6 +278,10 @@ export default {
   color: #007bff;
   font-size: 13px;
   cursor: pointer;
+}
+.explain{
+  font-size: 16px;
+  color: #ee3030;
 }
 </style>
 
