@@ -16,10 +16,10 @@
           end-placeholder="区间结束时间"
           :default-time="['10:00:00', '10:00:00']">
         </el-date-picker>
-        <el-button @click="submit" class="float-r" size="small" type="primary">导出</el-button>
+        <el-button style="margin-left:10px" @click="submit" class="float-r" size="small" type="primary">导出</el-button>
+        <el-button @click="query" class="float-r" size="small" type="primary">查询</el-button>
       </div>
     </div>
-    <div class="m-t-20 explain">友情提示：已选过的商品不能二次选中，要想导出直接点击【导出】</div>
     <div class="m-t-20">
       <el-table
         :data="tableData"
@@ -27,9 +27,13 @@
         ref="table"
         @selection-change="handleSelectionChange"
         :highlight-current-Row="true">
-        <el-table-column
+        <!-- <el-table-column
           type="selection"
           :selectable='checkboxInit'
+          width="55">
+        </el-table-column> -->
+         <el-table-column
+          type="selection"
           width="55">
         </el-table-column>
         <el-table-column
@@ -158,12 +162,12 @@ export default {
       this.currentPage = val.val;
       this.table();
     },
-    checkboxInit(row,index){
-      if (row.status==2) 
-        return 0;//不可勾选
-      else
-        return 1;//可勾选
-    },
+    // checkboxInit(row,index){
+    //   if (row.status==2) 
+    //     return 0;//不可勾选
+    //   else
+    //     return 1;//可勾选
+    // },
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
@@ -206,9 +210,21 @@ export default {
     },
     submit:function(){
       let _this = this;
-       _this.$api.allcsv().then(res => {
-         window.location.href = res.data;
-       });
+      if(_this.multipleSelection.length<1){
+        _this.$message({
+          message: '至少选一条商品哦！',
+          type: 'warning'
+        })
+        return false;
+      }
+      let resultArr = _this.multipleSelection.map(function(a) {return a.id;});
+      let resultStr = resultArr.join();
+      console.log(resultStr)
+      _this.$api.selects({
+        ids: resultStr
+      }).then(res =>{
+        window.location.href = res.data;
+      });
     },
     detail:function(url){
       window.open(url)

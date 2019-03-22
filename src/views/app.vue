@@ -35,7 +35,7 @@ export default {
       nickName:"",
       userType:"",
       option:[{
-        name:"全部商品",
+        name:"未选中商品",
         url:"/app/allgoods"
       },{
         name:"已选中商品",

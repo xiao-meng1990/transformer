@@ -16,17 +16,17 @@
           end-placeholder="区间结束时间"
           :default-time="['10:00:00', '10:00:00']">
         </el-date-picker>
-        <el-button 
+        <!-- <el-button 
           class="float-r" 
           style="margin-left:10px" 
           size="small" 
           type="primary"
           @click="submit"
-        >选中并导出</el-button>
+        >选中并导出</el-button> -->
         <el-button @click="query" class="float-r" size="small" type="primary">查询</el-button>
       </div>
     </div>
-    <div class="m-t-20 explain">友情提示：已选过的商品不能二次选中，要想导出可点击左边栏【已选中商品】直接导出</div>
+    <!-- <div class="m-t-20 explain">友情提示：已选过的商品不能二次选中，要想导出可点击左边栏【已选中商品】直接导出</div> -->
     <div class="m-t-20">
       <el-table
         :data="tableData"
@@ -144,7 +144,7 @@ export default {
       tableData:[],
       selected:[],
       multipleSelection: [],
-      selectId:""  //不传就是全部商品
+      selectId:"1"  //不传就是全部商品
     }
   },
   mounted:function(){
@@ -173,6 +173,7 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      this.submit();
     },
     query:function(){
       this.table();
@@ -230,7 +231,7 @@ export default {
       _this.$api.selects({
         ids: resultStr
       }).then(res =>{
-        window.location.href = res.data;
+        // window.location.href = res.data;
       });
     },
     detail:function(url){

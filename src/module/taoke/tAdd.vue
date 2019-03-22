@@ -364,8 +364,13 @@ export default {
             type: 'success'
           });
           setTimeout(function(){
-            _this.$router.push({path:"/taoke/add"})
-          },2000)
+           _this.$router.push({
+              path: '../taoke/goods',
+              query: {
+                id: 2
+              }
+            })
+          },1000)
         }else{
           _this.$message.error(res.msg);
         }
